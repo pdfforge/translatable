@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Translation;
 using TranslationTest;
@@ -43,13 +44,21 @@ namespace TranslationExport
             {
                 var comment = GetTranslatorcomment(property, obj);
                 if (!string.IsNullOrEmpty(comment))
-                    sb.AppendLine("//" + comment);
+                    sb.AppendLine("#. " + EscpaeString(comment));
 
-                sb.AppendLine($"{property.GetValue(obj)}");
+                var escapedMessage = EscpaeString(property.GetValue(obj).ToString());
+                sb.AppendLine($"msgid \"{escapedMessage}\"");
+                sb.AppendLine("msgstr \"\"");
+                sb.AppendLine();
             }
 
             var file = Path.Combine(outputDirectory, translatable.FullName + ".pot");
             File.WriteAllText(file, sb.ToString());
+        }
+
+        private string EscpaeString(string str)
+        {
+            return str.Replace("\r", "\\r").Replace("\n", "\\n");
         }
 
         private string GetTranslatorcomment(PropertyInfo pi, object o)
