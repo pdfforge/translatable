@@ -1,25 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Translation;
-using TranslationTest;
 
 namespace TranslationExport
 {
     class Exporter
     {
-        // TODO Hack to actually load assembly
-        private MainWindowTranslation x = new MainWindowTranslation();
-
         public void DoExport(string outputDirectory)
         {
             if (!Directory.Exists(outputDirectory))
                 Directory.CreateDirectory(outputDirectory);
+
+            //TODO Read from command line parameter
+            var binFolder = Path.GetFullPath(".");
+
+            var assemblies = Directory.EnumerateFiles(binFolder, "*.dll")
+                .Union(Directory.EnumerateFiles(binFolder, "*.exe"));
+
+            foreach (var assembly in assemblies)
+            {
+                Assembly.LoadFile(Path.GetFullPath(assembly));
+            }
+            
 
             var translatableType = typeof(ITranslatable);
             var translatables = AppDomain.CurrentDomain.GetAssemblies()
@@ -42,7 +47,7 @@ namespace TranslationExport
 
             foreach (var property in properties)
             {
-                var comment = GetTranslatorcomment(property, obj);
+                var comment = GetTranslatorcomment(property);
                 if (!string.IsNullOrEmpty(comment))
                     sb.AppendLine("#. " + EscpaeString(comment));
 
@@ -61,7 +66,7 @@ namespace TranslationExport
             return str.Replace("\r", "\\r").Replace("\n", "\\n");
         }
 
-        private string GetTranslatorcomment(PropertyInfo pi, object o)
+        private string GetTranslatorcomment(PropertyInfo pi)
         {
             var attributes = pi.GetCustomAttributes(typeof(TranslatorCommentAttribute), false) as TranslatorCommentAttribute[];
 
