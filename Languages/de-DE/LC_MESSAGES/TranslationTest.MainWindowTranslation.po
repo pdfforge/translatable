@@ -1,0 +1,29 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"Last-Translator: pdfforge\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de\n"
+
+msgid "Main window title"
+msgstr "Hauptfenster-Titel"
+
+msgid "This is my content"
+msgstr "Dies ist mein Inhalt"
+
+msgid "Messages"
+msgstr "Nachrichten"
+
+msgid "You have {0} new messages"
+msgstr "Sie haben {0} neue Nachrichten"
+
+#. This page is intentionally left blank
+msgid "This translation might be missing"
+msgstr ""

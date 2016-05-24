@@ -1,0 +1,16 @@
+msgid "Main window title"
+msgstr ""
+
+msgid "This is my content"
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "You have {0} new messages"
+msgstr ""
+
+#. This page is intentionally left blank
+msgid "This translation might be missing"
+msgstr ""
+

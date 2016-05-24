@@ -9,16 +9,15 @@ namespace TranslationExport
 {
     class Exporter
     {
-        public void DoExport(string outputDirectory)
+        public void DoExport(string assemblyDirectory, string outputDirectory)
         {
             if (!Directory.Exists(outputDirectory))
                 Directory.CreateDirectory(outputDirectory);
 
-            //TODO Read from command line parameter
-            var binFolder = Path.GetFullPath(".");
+            assemblyDirectory = Path.GetFullPath(assemblyDirectory);
 
-            var assemblies = Directory.EnumerateFiles(binFolder, "*.dll")
-                .Union(Directory.EnumerateFiles(binFolder, "*.exe"));
+            var assemblies = Directory.EnumerateFiles(assemblyDirectory, "*.dll")
+                .Union(Directory.EnumerateFiles(assemblyDirectory, "*.exe"));
 
             foreach (var assembly in assemblies)
             {
@@ -39,7 +38,8 @@ namespace TranslationExport
 
         private void Export(string outputDirectory, Type translatable)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder potBuilder = new StringBuilder();
+            StringBuilder poBuilder = new StringBuilder();
 
             var properties = translatable.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -49,16 +49,27 @@ namespace TranslationExport
             {
                 var comment = GetTranslatorcomment(property);
                 if (!string.IsNullOrEmpty(comment))
-                    sb.AppendLine("#. " + EscpaeString(comment));
+                {
+                    potBuilder.AppendLine("#. " + EscpaeString(comment));
+                    poBuilder.AppendLine("#. " + EscpaeString(comment));
+                }
 
                 var escapedMessage = EscpaeString(property.GetValue(obj).ToString());
-                sb.AppendLine($"msgid \"{escapedMessage}\"");
-                sb.AppendLine("msgstr \"\"");
-                sb.AppendLine();
+
+                potBuilder.AppendLine($"msgid \"{escapedMessage}\"");
+                potBuilder.AppendLine("msgstr \"\"");
+                potBuilder.AppendLine();
+
+                poBuilder.AppendLine($"msgid \"{escapedMessage}\"");
+                poBuilder.AppendLine($"msgstr \"{escapedMessage}\"");
+                poBuilder.AppendLine();
             }
 
-            var file = Path.Combine(outputDirectory, translatable.FullName + ".pot");
-            File.WriteAllText(file, sb.ToString());
+            var potFile = Path.Combine(outputDirectory, translatable.FullName + ".pot");
+            File.WriteAllText(potFile, potBuilder.ToString());
+
+            var poFile = Path.Combine(outputDirectory, translatable.FullName + ".po");
+            File.WriteAllText(poFile, poBuilder.ToString());
         }
 
         private string EscpaeString(string str)

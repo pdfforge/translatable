@@ -1,4 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using Translation;
 
 namespace TranslationTest
@@ -10,8 +15,43 @@ namespace TranslationTest
 
         public MainWindowViewModel()
         {
-            _translationFactory = new TranslationFactory();
+            var translationFolder = GetTranslationFolder();
+
+            LoadLanguages(translationFolder);
+
+            _translationFactory = new TranslationFactory(translationFolder);
             Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
+        }
+
+        private string GetTranslationFolder()
+        {
+            var candidates = new[]
+            {
+                "Languages",
+                @"..\..\..\Languages"
+            };
+
+            foreach (var candidate in candidates)
+            {
+                if (Directory.Exists(candidate))
+                    return Path.GetFullPath(candidate);
+            }
+
+            return null;
+        }
+
+        private void LoadLanguages(string translationFolder)
+        {
+            if (!Directory.Exists(translationFolder))
+                return;
+
+            foreach (var directory in Directory.EnumerateDirectories(translationFolder))
+            {
+                var cultureName = Path.GetFileName(directory);
+                var cultureInfo = CultureInfo.GetCultureInfo(cultureName);
+                if (cultureInfo != null)
+                    Languages.Add(cultureInfo);
+            }
         }
 
         private int _messages;
@@ -28,14 +68,16 @@ namespace TranslationTest
             }
         }
 
-        private string _language = "English";
-        public string Language
+        public IList<CultureInfo> Languages { get; set; } = new List<CultureInfo>();
+
+        private CultureInfo _language;
+        public CultureInfo Language
         {
             get { return _language; }
             set
             {
                 _language = value;
-                _translationFactory.Language = value;
+                _translationFactory.SetLanguage(value);
                 Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
                 RaisePropertyChanged(nameof(Translation));
                 RaisePropertyChanged(nameof(MessageText));

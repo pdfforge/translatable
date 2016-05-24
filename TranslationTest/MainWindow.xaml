@@ -15,9 +15,6 @@
         <TextBox Text="{Binding Messages, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="{Binding MessageText}" />
         <TextBlock Text="{Binding Translation.MissingTranslation}" />
-        <ComboBox SelectedValue="{Binding Language}" SelectedValuePath="Content">
-            <ComboBoxItem>English</ComboBoxItem>
-            <ComboBoxItem>German</ComboBoxItem>
-        </ComboBox>
+        <ComboBox SelectedItem="{Binding Language}" ItemsSource="{Binding Languages}" DisplayMemberPath="Name" />
     </StackPanel>
 </Window>
