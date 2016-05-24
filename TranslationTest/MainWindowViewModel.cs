@@ -18,9 +18,10 @@ namespace TranslationTest
             var translationFolder = GetTranslationFolder();
 
             LoadLanguages(translationFolder);
-
+            
             _translationFactory = new TranslationFactory(translationFolder);
-            Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
+            Language = new CultureInfo("en-US");
+
         }
 
         private string GetTranslationFolder()
