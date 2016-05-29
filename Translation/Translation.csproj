@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultPluralBuilder.cs" />
+    <Compile Include="GettextPluralBuilder.cs" />
     <Compile Include="IPluralBuilder.cs" />
     <Compile Include="ITranslatable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

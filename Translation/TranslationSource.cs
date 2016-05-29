@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using NGettext;
 using NGettext.Loaders;
 
@@ -24,11 +25,20 @@ namespace Translation
             }
         }
 
+        public IPluralBuilder GetPluralBuilder()
+        {
+            if (_translationCatalogs.Count == 0)
+                return new DefaultPluralBuilder();
+
+            return new GettextPluralBuilder(_translationCatalogs.First().Value.PluralRule);
+        }
+
         public string GetTranslation(string section, string translationKey)
         {
             var untranslatedString = "UNTRANSLATED: " + translationKey;
 
             Catalog catalog;
+
             if (!_translationCatalogs.TryGetValue(section, out catalog))
                 return untranslatedString;
 

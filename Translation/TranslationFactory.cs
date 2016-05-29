@@ -37,7 +37,7 @@ namespace Translation
 
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            IPluralBuilder pluralBuilder = new DefaultPluralBuilder();
+            IPluralBuilder pluralBuilder = translationSource.GetPluralBuilder();
 
             foreach (var property in properties)
             {
