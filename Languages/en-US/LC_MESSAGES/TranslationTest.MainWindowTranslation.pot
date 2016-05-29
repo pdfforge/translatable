@@ -7,8 +7,10 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-msgid "You have {0} new messages"
-msgstr ""
+msgid "You have {0} new message"
+msgid_plural "You have {0} new messages"
+msgstr[0] ""
+msgstr[1] ""
 
 #. This page is intentionally left blank
 msgid "This translation might be missing"

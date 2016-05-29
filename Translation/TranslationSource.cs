@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -36,9 +37,24 @@ namespace Translation
             if (!catalog.Translations.ContainsKey(translationKey))
                 return untranslatedString;
 
-            var translation = catalog.GetString(translationKey);
+            return catalog.GetString(translationKey);
+        }
 
-            return translation;
+        public string[] GetAllTranslations(string section, string translationKey, IPluralBuilder pluralBuilder)
+        {
+            Catalog catalog;
+            if (!_translationCatalogs.TryGetValue(section, out catalog))
+                return new string[] {};
+
+            if (!catalog.Translations.ContainsKey(translationKey))
+                return new string[] { };
+
+            var translations = catalog.GetTranslations(translationKey);
+
+            if (translations.Length != pluralBuilder.NumberOfPlurals)
+                return new string[] {};
+
+            return translations;
         }
 
         public void Translate(ITranslatable o)
@@ -48,21 +64,61 @@ namespace Translation
 
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
+            IPluralBuilder pluralBuilder = new DefaultPluralBuilder();
+
             foreach (var property in properties)
             {
                 if (!property.CanRead || !property.CanWrite)
                     continue;
 
-                if (!property.PropertyType.Equals(typeof(string)))
+                if (property.PropertyType == typeof(string))
+                {
+                    SetStringProperty(o, property, translationSection);
                     continue;
+                }
 
-                var value = (string)property.GetValue(o);
+                if (property.PropertyType == typeof(string[]))
+                {
+                    SetStringArrayProperty(o, property, translationSection, pluralBuilder);
+                    continue;
+                }
 
-                var translated = GetTranslation(translationSection, value);
+                if (property.PropertyType == typeof(IPluralBuilder))
+                {
+                    SetPluralbuilderProperty(o, property, pluralBuilder);
+                    continue;
+                }
 
-                if (!string.IsNullOrEmpty(translated))
-                    property.SetValue(o, translated);
+                throw new InvalidOperationException($"The type {property.PropertyType} is not supported in ITranslatables.");
             }
+        }
+
+        private void SetPluralbuilderProperty(ITranslatable translatable, PropertyInfo property, IPluralBuilder pluralBuilder)
+        {
+            property.SetValue(translatable, pluralBuilder);
+        }
+
+        private void SetStringProperty(ITranslatable o, PropertyInfo property, string translationSection)
+        {
+            var value = (string) property.GetValue(o);
+
+            var translated = GetTranslation(translationSection, value);
+
+            if (!string.IsNullOrEmpty(translated))
+                property.SetValue(o, translated);
+        }
+
+        private void SetStringArrayProperty(ITranslatable o, PropertyInfo property, string translationSection, IPluralBuilder pluralBuilder)
+        {
+            var value = (string[])property.GetValue(o);
+
+            if (value.Length != 2)
+                throw new InvalidDataException($"The plural string for section {translationSection} and key {property.Name} must contain two strings: a singular and a plural form. It contained {value.Length} strings.");
+
+            var translations = GetAllTranslations(translationSection, value[0], pluralBuilder);
+
+            if (translations.Length == pluralBuilder.NumberOfPlurals)
+                property.SetValue(o, translations);
         }
     }
 }

@@ -47,22 +47,56 @@ namespace TranslationExport
 
             foreach (var property in properties)
             {
-                var comment = GetTranslatorcomment(property);
+                if (property.PropertyType.IsAssignableFrom(typeof(IPluralBuilder)))
+                    continue;
+
+                var comment = GetTranslatorComment(property);
                 if (!string.IsNullOrEmpty(comment))
                 {
-                    potBuilder.AppendLine("#. " + EscpaeString(comment));
-                    poBuilder.AppendLine("#. " + EscpaeString(comment));
+                    potBuilder.AppendLine("#. " + EscapeString(comment));
+                    poBuilder.AppendLine("#. " + EscapeString(comment));
                 }
 
-                var escapedMessage = EscpaeString(property.GetValue(obj).ToString());
+                if (property.PropertyType == typeof(string))
+                {
+                    var escapedMessage = EscapeString(property.GetValue(obj).ToString());
 
-                potBuilder.AppendLine($"msgid \"{escapedMessage}\"");
-                potBuilder.AppendLine("msgstr \"\"");
-                potBuilder.AppendLine();
+                    potBuilder.AppendLine($"msgid \"{escapedMessage}\"");
+                    potBuilder.AppendLine("msgstr \"\"");
+                    potBuilder.AppendLine();
 
-                poBuilder.AppendLine($"msgid \"{escapedMessage}\"");
-                poBuilder.AppendLine($"msgstr \"{escapedMessage}\"");
-                poBuilder.AppendLine();
+                    poBuilder.AppendLine($"msgid \"{escapedMessage}\"");
+                    poBuilder.AppendLine($"msgstr \"{escapedMessage}\"");
+                    poBuilder.AppendLine();
+
+                    continue;
+                }
+
+                if (property.PropertyType == typeof(string[]))
+                {
+                    var value = (string[]) property.GetValue(obj);
+
+                    if (value.Length != 2)
+                        throw new InvalidDataException($"The plural string for {property.Name} must contain two strings: a singular and a plural form. It contained {value.Length} strings.");
+
+                    var escapedSingular = EscapeString(value[0]);
+                    var escapedPlural = EscapeString(value[1]);
+
+                    potBuilder.AppendLine($"msgid \"{escapedSingular}\"");
+                    potBuilder.AppendLine($"msgid_plural \"{escapedPlural}\"");
+                    potBuilder.AppendLine("msgstr[0] \"\"");
+                    potBuilder.AppendLine("msgstr[1] \"\"");
+                    potBuilder.AppendLine();
+
+                    poBuilder.AppendLine($"msgid \"{escapedSingular}\"");
+                    poBuilder.AppendLine($"msgid_plural \"{escapedPlural}\"");
+                    poBuilder.AppendLine($"msgstr[0] \"{value[0]}\"");
+                    poBuilder.AppendLine($"msgstr[1] \"{value[1]}\"");
+                    poBuilder.AppendLine();
+                    continue;
+                }
+
+                throw new InvalidOperationException($"The type {property.PropertyType} is not supported in ITranslatables.");
             }
 
             var potFile = Path.Combine(outputDirectory, translatable.FullName + ".pot");
@@ -72,12 +106,12 @@ namespace TranslationExport
             File.WriteAllText(poFile, poBuilder.ToString());
         }
 
-        private string EscpaeString(string str)
+        private string EscapeString(string str)
         {
             return str.Replace("\r", "\\r").Replace("\n", "\\n");
         }
 
-        private string GetTranslatorcomment(PropertyInfo pi)
+        private string GetTranslatorComment(PropertyInfo pi)
         {
             var attributes = pi.GetCustomAttributes(typeof(TranslatorCommentAttribute), false) as TranslatorCommentAttribute[];
 
