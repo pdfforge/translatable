@@ -29,7 +29,7 @@ namespace TranslationTest
             var candidates = new[]
             {
                 "Languages",
-                @"..\..\..\Languages"
+                @"..\..\Languages"
             };
 
             foreach (var candidate in candidates)
