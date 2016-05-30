@@ -53,10 +53,6 @@
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TranslationTest\TranslationTest.csproj">
-      <Project>{b35563ad-59b7-4415-ba02-ad7a3d2aa9e9}</Project>
-      <Name>TranslationTest</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Translation\Translation.csproj">
       <Project>{76170e37-ab54-46d2-ac26-8ffa71591e37}</Project>
       <Name>Translation</Name>

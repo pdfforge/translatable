@@ -18,12 +18,7 @@ namespace TranslationExport
                   exporter.DoExport(options);
                   return 0;
               },
-                  errors =>
-                  {
-                      Console.WriteLine(errors);
-                      return 1;
-                  }
-        );
+                  errors => 1);
             Environment.ExitCode = exitCode;
         }
     }
