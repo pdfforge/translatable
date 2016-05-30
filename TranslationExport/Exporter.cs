@@ -9,21 +9,17 @@ namespace TranslationExport
 {
     class Exporter
     {
-        public void DoExport(string assemblyDirectory, string outputDirectory)
+        public void DoExport(ExportOptions exportOptions)
         {
+            var outputDirectory = Path.GetFullPath(exportOptions.OutputPath);
+
             if (!Directory.Exists(outputDirectory))
                 Directory.CreateDirectory(outputDirectory);
 
-            assemblyDirectory = Path.GetFullPath(assemblyDirectory);
-
-            var assemblies = Directory.EnumerateFiles(assemblyDirectory, "*.dll")
-                .Union(Directory.EnumerateFiles(assemblyDirectory, "*.exe"));
-
-            foreach (var assembly in assemblies)
+            foreach (var assembly in exportOptions.Assemblies)
             {
                 Assembly.LoadFile(Path.GetFullPath(assembly));
             }
-            
 
             var translatableType = typeof(ITranslatable);
             var translatables = AppDomain.CurrentDomain.GetAssemblies()

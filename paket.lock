@@ -1,6 +1,7 @@
 NUGET
   remote: http://nuget.pdfforge.org/api/odata
   specs:
+    CommandLineParser (2.0.275-beta)
     Microsoft.CSharp (4.0.1-beta-23516) - framework: dnxcore50
       System.Collections (>= 4.0.10) - framework: dnxcore50
       System.Diagnostics.Debug (>= 4.0.10) - framework: dnxcore50

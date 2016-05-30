@@ -1,3 +1,4 @@
 source http://nuget.pdfforge.org/api/odata
 
 nuget NGettext
+nuget CommandLineParser >= 2.0
