@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using NGettext;
 using NGettext.Loaders;
 
@@ -9,53 +7,42 @@ namespace Translation
 {
     public class TranslationSource
     {
-        private readonly Dictionary<string, Catalog> _translationCatalogs = new Dictionary<string, Catalog>();
+        private readonly Catalog catalog;
 
-        public TranslationSource(string translationFolder, CultureInfo cultureInfo)
+        public TranslationSource(string translationFolder, string moDomain, CultureInfo cultureInfo)
         {
-            var folder = Path.Combine(translationFolder, cultureInfo.Name);
-            foreach (var moFile in Directory.EnumerateFiles(folder, "*.mo", SearchOption.AllDirectories))
-            {
-                using (var moStream = File.OpenRead(moFile))
-                {
-                    var loader = new MoLoader(moStream);
-                    var moDomain = Path.GetFileNameWithoutExtension(moFile);
-                    _translationCatalogs[moDomain] = new Catalog(loader, cultureInfo);
-                }
-            }
+            catalog = new Catalog(new MoLoader(moDomain, translationFolder), cultureInfo);
         }
 
         public IPluralBuilder GetPluralBuilder()
         {
-            if (_translationCatalogs.Count == 0)
+            if (catalog == null)
                 return new DefaultPluralBuilder();
 
-            return new GettextPluralBuilder(_translationCatalogs.First().Value.PluralRule);
+            return new GettextPluralBuilder(catalog.PluralRule);
         }
 
-        public string GetTranslation(string section, string translationKey)
+        public string GetTranslation(string translationKey)
         {
             var untranslatedString = "UNTRANSLATED: " + translationKey;
 
-            Catalog catalog;
+            try
+            {
+                if (!catalog.Translations.ContainsKey(translationKey))
+                    return untranslatedString;
 
-            if (!_translationCatalogs.TryGetValue(section, out catalog))
+                return catalog.GetString(translationKey);
+            }
+            catch (KeyNotFoundException)
+            {
                 return untranslatedString;
-
-            if (!catalog.Translations.ContainsKey(translationKey))
-                return untranslatedString;
-
-            return catalog.GetString(translationKey);
+            }
         }
 
-        public string[] GetAllTranslations(string section, string translationKey, IPluralBuilder pluralBuilder)
+        public string[] GetAllTranslations(string translationKey, IPluralBuilder pluralBuilder)
         {
-            Catalog catalog;
-            if (!_translationCatalogs.TryGetValue(section, out catalog))
-                return new string[] {};
-
             if (!catalog.Translations.ContainsKey(translationKey))
-                return new string[] { };
+                return new string[] {};
 
             var translations = catalog.GetTranslations(translationKey);
 

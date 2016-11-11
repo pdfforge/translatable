@@ -18,7 +18,7 @@ namespace Translation
 
         public void SetLanguage(CultureInfo culture)
         {
-            _translationSource = new TranslationSource(_translationDir, culture);
+            _translationSource = new TranslationSource(_translationDir, "messages", culture);
         }
 
         public T CreateTranslation<T>() where T: ITranslatable
@@ -33,7 +33,6 @@ namespace Translation
         private void Translate(ITranslatable o, TranslationSource translationSource)
         {
             var type = o.GetType();
-            var translationSection = type.FullName;
 
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -46,13 +45,13 @@ namespace Translation
 
                 if (property.PropertyType == typeof(string))
                 {
-                    SetStringProperty(o, property, translationSection, translationSource);
+                    SetStringProperty(o, property, translationSource);
                     continue;
                 }
 
                 if (property.PropertyType == typeof(string[]))
                 {
-                    SetStringArrayProperty(o, property, translationSection, pluralBuilder, translationSource);
+                    SetStringArrayProperty(o, property, pluralBuilder, translationSource);
                     continue;
                 }
 
@@ -71,24 +70,24 @@ namespace Translation
             property.SetValue(translatable, pluralBuilder);
         }
 
-        private void SetStringProperty(ITranslatable o, PropertyInfo property, string translationSection, TranslationSource translationSource)
+        private void SetStringProperty(ITranslatable o, PropertyInfo property, TranslationSource translationSource)
         {
             var value = (string)property.GetValue(o);
 
-            var translated = translationSource.GetTranslation(translationSection, value);
+            var translated = translationSource.GetTranslation(value);
 
             if (!string.IsNullOrEmpty(translated))
                 property.SetValue(o, translated);
         }
 
-        private void SetStringArrayProperty(ITranslatable o, PropertyInfo property, string translationSection, IPluralBuilder pluralBuilder, TranslationSource translationSource)
+        private void SetStringArrayProperty(ITranslatable o, PropertyInfo property, IPluralBuilder pluralBuilder, TranslationSource translationSource)
         {
             var value = (string[])property.GetValue(o);
 
             if (value.Length != 2)
-                throw new InvalidDataException($"The plural string for section {translationSection} and key {property.Name} must contain two strings: a singular and a plural form. It contained {value.Length} strings.");
+                throw new InvalidDataException($"The plural string for key {property.Name} must contain two strings: a singular and a plural form. It contained {value.Length} strings.");
 
-            var translations = translationSource.GetAllTranslations(translationSection, value[0], pluralBuilder);
+            var translations = translationSource.GetAllTranslations(value[0], pluralBuilder);
 
             if (translations.Length == pluralBuilder.NumberOfPlurals)
                 property.SetValue(o, translations);

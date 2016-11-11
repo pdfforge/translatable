@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Translation;
+using TranslationExport.Po;
 
 namespace TranslationExport
 {
@@ -16,27 +17,47 @@ namespace TranslationExport
             if (!Directory.Exists(outputDirectory))
                 Directory.CreateDirectory(outputDirectory);
 
-            foreach (var assembly in exportOptions.Assemblies)
-            {
-                Assembly.LoadFile(Path.GetFullPath(assembly));
-            }
+            var assemblies = LoadAssemblies(exportOptions.Assemblies);
 
             var translatableType = typeof(ITranslatable);
-            var translatables = AppDomain.CurrentDomain.GetAssemblies()
+            var translatables = assemblies
                 .SelectMany(s => s.GetTypes())
                 .Where(t => translatableType.IsAssignableFrom(t) && !t.IsAbstract).ToList();
 
+            var catalog = new Catalog();
+
             foreach (var translatable in translatables)
             {
-                Export(outputDirectory, translatable);
+                Export(translatable, catalog);
             }
+
+            var writer = new PotWriter();
+
+            var potFile = Path.Combine(outputDirectory, "messages.pot");
+            writer.WritePotFile(potFile, catalog);
         }
 
-        private void Export(string outputDirectory, Type translatable)
+        private IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> assemblyFiles)
         {
-            StringBuilder potBuilder = new StringBuilder();
-            StringBuilder poBuilder = new StringBuilder();
+            var assemblies = new List<Assembly>();
+            foreach (var assemblyFile in assemblyFiles)
+            {
+                try
+                {
+                    assemblies.Add(Assembly.LoadFile(Path.GetFullPath(assemblyFile)));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Could not load assembly file '{assemblyFile}': {ex}");
+                    throw;
+                }
+            }
 
+            return assemblies;
+        }
+
+        private void Export(Type translatable, Catalog catalog)
+        {
             var properties = translatable.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             var obj = Activator.CreateInstance(translatable);
@@ -47,23 +68,12 @@ namespace TranslationExport
                     continue;
 
                 var comment = GetTranslatorComment(property);
-                if (!string.IsNullOrEmpty(comment))
-                {
-                    potBuilder.AppendLine("#. " + EscapeString(comment));
-                    poBuilder.AppendLine("#. " + EscapeString(comment));
-                }
 
                 if (property.PropertyType == typeof(string))
                 {
                     var escapedMessage = EscapeString(property.GetValue(obj).ToString());
 
-                    potBuilder.AppendLine($"msgid \"{escapedMessage}\"");
-                    potBuilder.AppendLine("msgstr \"\"");
-                    potBuilder.AppendLine();
-
-                    poBuilder.AppendLine($"msgid \"{escapedMessage}\"");
-                    poBuilder.AppendLine($"msgstr \"{escapedMessage}\"");
-                    poBuilder.AppendLine();
+                    catalog.AddEntry(escapedMessage, comment);
 
                     continue;
                 }
@@ -78,28 +88,13 @@ namespace TranslationExport
                     var escapedSingular = EscapeString(value[0]);
                     var escapedPlural = EscapeString(value[1]);
 
-                    potBuilder.AppendLine($"msgid \"{escapedSingular}\"");
-                    potBuilder.AppendLine($"msgid_plural \"{escapedPlural}\"");
-                    potBuilder.AppendLine("msgstr[0] \"\"");
-                    potBuilder.AppendLine("msgstr[1] \"\"");
-                    potBuilder.AppendLine();
+                    catalog.AddPluralEntry(escapedSingular, escapedPlural, comment);
 
-                    poBuilder.AppendLine($"msgid \"{escapedSingular}\"");
-                    poBuilder.AppendLine($"msgid_plural \"{escapedPlural}\"");
-                    poBuilder.AppendLine($"msgstr[0] \"{value[0]}\"");
-                    poBuilder.AppendLine($"msgstr[1] \"{value[1]}\"");
-                    poBuilder.AppendLine();
                     continue;
                 }
 
                 throw new InvalidOperationException($"The type {property.PropertyType} is not supported in ITranslatables.");
             }
-
-            var potFile = Path.Combine(outputDirectory, translatable.FullName + ".pot");
-            File.WriteAllText(potFile, potBuilder.ToString());
-
-            var poFile = Path.Combine(outputDirectory, translatable.FullName + ".po");
-            File.WriteAllText(poFile, poBuilder.ToString());
         }
 
         private string EscapeString(string str)
@@ -114,7 +109,7 @@ namespace TranslationExport
             if (attributes != null && attributes.Length > 0)
                 return attributes[0].Value;
 
-            return null;
+            return "";
         }
     }
 }
