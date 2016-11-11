@@ -27,9 +27,7 @@ namespace TranslationExport
             var catalog = new Catalog();
 
             foreach (var translatable in translatables)
-            {
                 Export(translatable, catalog);
-            }
 
             var writer = new PotWriter();
 
@@ -73,7 +71,7 @@ namespace TranslationExport
                 {
                     var escapedMessage = EscapeString(property.GetValue(obj).ToString());
 
-                    catalog.AddEntry(escapedMessage, comment);
+                    catalog.AddEntry(escapedMessage, comment, translatable.FullName);
 
                     continue;
                 }
@@ -88,7 +86,7 @@ namespace TranslationExport
                     var escapedSingular = EscapeString(value[0]);
                     var escapedPlural = EscapeString(value[1]);
 
-                    catalog.AddPluralEntry(escapedSingular, escapedPlural, comment);
+                    catalog.AddPluralEntry(escapedSingular, escapedPlural, comment, translatable.FullName);
 
                     continue;
                 }

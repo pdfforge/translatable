@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -23,6 +24,12 @@ namespace TranslationExport.Po
                         if (!string.IsNullOrWhiteSpace(poEntry.Comment))
                         {
                             output.WriteLine($"#. {poEntry.Comment}");
+                        }
+
+                        if (poEntry.SourceReferences.Any())
+                        {
+                            var referencesString = string.Join(" ", poEntry.SourceReferences);
+                            output.WriteLine($"#: {referencesString}");
                         }
 
                         if (poEntry is SingularEntry)

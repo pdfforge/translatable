@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TranslationExport.Po
 {
@@ -10,32 +7,59 @@ namespace TranslationExport.Po
     {
         public IList<PoEntry> Entries { get; } = new List<PoEntry>();
 
-        public void AddEntry(string msgid, string comment = "")
+        public void AddEntry(string msgid, string comment = "", string sourceReference = "")
         {
-            var existingEntry = Entries.Where(x => x is SingularEntry).Cast<SingularEntry>().FirstOrDefault(x => x.MsgId == msgid);
-
-            if (existingEntry != null)
-            {
-                if (string.IsNullOrWhiteSpace(existingEntry.Comment))
-                    existingEntry.Comment = comment;
-                return;
-            }
-
-            Entries.Add(new SingularEntry(msgid, comment));
+            var entry = CreateOrGetEntry(msgid);
+            UpdateEntry(entry, comment, sourceReference);
         }
 
-        public void AddPluralEntry(string msgidSingular, string msgidPlural, string comment = "")
+        private void UpdateEntry(PoEntry entry, string comment, string sourceReference)
         {
-            var existingEntry = Entries.Where(x => x is PluralEntry).Cast<PluralEntry>().FirstOrDefault(x => x.MsgIdSingular == msgidSingular && x.MsgIdPlural == msgidPlural);
+            if (string.IsNullOrWhiteSpace(entry.Comment))
+                entry.Comment = comment;
 
-            if (existingEntry != null)
+            if (!string.IsNullOrWhiteSpace(sourceReference))
+                entry.SourceReferences.Add(sourceReference);
+        }
+
+        private PoEntry CreateOrGetEntry(string msgid)
+        {
+            var entry = Entries
+                .Where(x => x is SingularEntry)
+                .Cast<SingularEntry>()
+                .FirstOrDefault(x => x.MsgId == msgid);
+
+            if (entry == null)
             {
-                if (string.IsNullOrWhiteSpace(existingEntry.Comment))
-                    existingEntry.Comment = comment;
-                return;
+                entry = new SingularEntry(msgid);
+                Entries.Add(entry);
             }
 
-            Entries.Add(new PluralEntry(msgidSingular, msgidPlural, comment));
+            return entry;
+        }
+
+        public void AddPluralEntry(string msgidSingular, string msgidPlural, string comment = "",
+            string sourceReference = "")
+        {
+            var entry = CreateOrGetPluralEntry(msgidSingular, msgidPlural);
+
+            UpdateEntry(entry, comment, sourceReference);
+        }
+
+        private PoEntry CreateOrGetPluralEntry(string msgidSingular, string msgidPlural)
+        {
+            var entry =
+                Entries.Where(x => x is PluralEntry)
+                    .Cast<PluralEntry>()
+                    .FirstOrDefault(x => (x.MsgIdSingular == msgidSingular) && (x.MsgIdPlural == msgidPlural));
+
+            if (entry == null)
+            {
+                entry = new PluralEntry(msgidSingular, msgidPlural);
+                Entries.Add(entry);
+            }
+
+            return entry;
         }
     }
 }

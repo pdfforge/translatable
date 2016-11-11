@@ -1,8 +1,11 @@
-﻿namespace TranslationExport.Po
+﻿using System.Collections.Generic;
+
+namespace TranslationExport.Po
 {
     public class PoEntry
     {
         public string Comment { get; set; }
+        public IList<string> SourceReferences = new List<string>();
 
     }
 

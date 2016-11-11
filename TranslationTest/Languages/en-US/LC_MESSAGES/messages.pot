@@ -2,21 +2,26 @@
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8"
 
+#: TranslationTest.MainWindowTranslation
 msgid "Main window title"
 msgstr ""
 
+#: TranslationTest.MainWindowTranslation
 msgid "This is my content"
 msgstr ""
 
+#: TranslationTest.MainWindowTranslation
 msgid "Messages"
 msgstr ""
 
+#: TranslationTest.MainWindowTranslation
 msgid "You have {0} new message"
 msgid_plural "You have {0} new messages"
 msgstr[0] ""
 msgstr[1] ""
 
 #. This page is intentionally left blank
+#: TranslationTest.MainWindowTranslation
 msgid "This translation might be missing"
 msgstr ""
 
