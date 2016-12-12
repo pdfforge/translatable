@@ -5,6 +5,9 @@ include-pdbs true
 references
 	Translatable.dll
 
+files
+	bin/Release/Translatable.dll => lib
+
 description
 	The Translatable project has the goal to make creating type-safe 
 	translation objects easy.

@@ -9,6 +9,9 @@ dependencies
 references
 	Translatable.NGettext.dll
 
+files
+	bin/Release/Translatable.NGettext.dll => lib
+
 description
 	The Translatable project has the goal to make creating type-safe 
 	translation objects easy.

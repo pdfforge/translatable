@@ -116,7 +116,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.0'">
       <ItemGroup>
         <Reference Include="NGettext">
-          <HintPath>..\packages\NGettext\lib\net40\NGettext.dll</HintPath>
+          <HintPath>..\..\packages\NGettext\lib\net40\NGettext.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

@@ -3,3 +3,7 @@ source http://nuget.pdfforge.org/api/odata
 
 nuget NGettext >= 0.6
 nuget CommandLineParser >= 2.0 prerelease
+
+group build
+    source http://nuget.pdfforge.org/api/odata
+    nuget FAKE

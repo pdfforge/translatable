@@ -3,3 +3,8 @@ NUGET
   remote: http://nuget.pdfforge.org/api/odata
     CommandLineParser (2.1.1-beta)
     NGettext (0.6.2)
+
+GROUP build
+NUGET
+  remote: http://nuget.pdfforge.org/api/odata
+    FAKE (4.46.0)

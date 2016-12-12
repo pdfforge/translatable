@@ -74,7 +74,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.0'">
       <ItemGroup>
         <Reference Include="CommandLine">
-          <HintPath>..\packages\CommandLineParser\lib\net40\CommandLine.dll</HintPath>
+          <HintPath>..\..\packages\CommandLineParser\lib\net40\CommandLine.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
