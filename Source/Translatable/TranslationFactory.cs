@@ -4,15 +4,28 @@ using System.Reflection;
 
 namespace Translatable
 {
+    /// <summary>
+    /// The TranslationFactory class uses reflection to translate instances of
+    /// ITranslatable into the target language.
+    /// </summary>
     public class TranslationFactory
     {
         private readonly ITranslationSource _translationSource;
 
+        /// <summary>
+        /// Create a new TranslationFactory with the given ITranslationSource
+        /// </summary>
+        /// <param name="translationSource">The source that will be used to look up all translations</param>
         public TranslationFactory(ITranslationSource translationSource)
         {
             _translationSource = translationSource;
         }
 
+        /// <summary>
+        /// Creates a translated instance of the type T using reflection and the given ITranslationSource
+        /// </summary>
+        /// <typeparam name="T">The type that will be analyzed and translated</typeparam>
+        /// <returns>A translated instance of T</returns>
         public T CreateTranslation<T>() where T: ITranslatable
         {
             var instance = Activator.CreateInstance<T>();

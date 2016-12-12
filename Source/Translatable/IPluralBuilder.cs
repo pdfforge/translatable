@@ -2,6 +2,9 @@
 
 namespace Translatable
 {
+    /// <summary>
+    /// IPluralBuilder knows how to select a plural form given a number and a list of plurals
+    /// </summary>
     public interface IPluralBuilder
     {
         /// <summary>

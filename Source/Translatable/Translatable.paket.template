@@ -6,7 +6,7 @@ references
 	Translatable.dll
 
 files
-	bin/Release/Translatable.dll => lib
+	bin/Release/Translatable.dll => lib/net40
 
 description
 	The Translatable project has the goal to make creating type-safe 

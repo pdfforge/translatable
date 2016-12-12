@@ -3,14 +3,14 @@ authors pdfforge GmbH
 include-pdbs true
 
 dependencies
-	Translatable > 0.0
+	Translatable ~> 0.1
 	NGettext = LOCKEDVERSION
 
 references
 	Translatable.NGettext.dll
 
 files
-	bin/Release/Translatable.NGettext.dll => lib
+	bin/Release/Translatable.NGettext.dll => lib/net40
 
 description
 	The Translatable project has the goal to make creating type-safe 

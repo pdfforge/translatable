@@ -3,6 +3,10 @@ using System.Reflection;
 
 namespace Translatable
 {
+    /// <summary>
+    /// Allows to add comments for the translators that will be included in the
+    /// translation files
+    /// </summary>
     public class TranslatorCommentAttribute : Attribute
     {
         public TranslatorCommentAttribute(string value)
