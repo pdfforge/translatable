@@ -12,20 +12,29 @@ msgstr ""
 "X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: Translatable.TranslationTest.MainWindowTranslation
 msgid "Main window title"
 msgstr "Hauptfenster-Titel"
 
-msgid "This is my content"
+#: Translatable.TranslationTest.MainWindowTranslation
+#, fuzzy
+#| msgid "This is my content"
+msgid ""
+"This is my content\n"
+"with multiple lines"
 msgstr "Dies ist mein Inhalt"
 
+#: Translatable.TranslationTest.MainWindowTranslation
 msgid "Messages"
 msgstr "Nachrichten"
 
+#: Translatable.TranslationTest.MainWindowTranslation
 msgid "You have {0} new message"
 msgid_plural "You have {0} new messages"
 msgstr[0] "Sie haben {0} neue Nachricht"
 msgstr[1] "Sie haben {0} neue Nachrichten"
 
 #. This page is intentionally left blank
-msgid "This translation might be missing"
+#: Translatable.TranslationTest.MainWindowTranslation
+msgid "This translation might be \"missing\""
 msgstr ""

@@ -18,8 +18,17 @@ let packageVersion = sprintf "%s%s" fullVersion buildSuffix
 let buildDir = "build"
 let artifactsDir = buildDir </> "artifacts"
 let sourceDir = "Source"
+let languageDir = sourceDir @@ "TranslationTest/Languages"
 
 open System
+open System.IO
+
+let execProcessOrFail cmd arguments =
+    let result = ExecProcess (fun info ->
+        info.FileName <- cmd
+        info.Arguments <- arguments) (TimeSpan.FromMinutes 10.0)
+
+    if result <> 0 then failwithf "the command '%s' failed with exit code %i" cmd result
 
 // We are cleaning more directories than actually required. This ensures, that artifactsDir always exists in further targets
 Description "Clean up"
@@ -65,7 +74,7 @@ Target "SetAssemblyInfoYear" (fun _ ->
 Description "Compile all C# projects"
 Target "Compile" (fun _ ->
     !! (sourceDir @@ "**/*.csproj")
-      |> MSBuildRelease "" "Build"
+      |> MSBuildRelease "" "Rebuild"
       |> Log "Build-Output: "
 )
 
@@ -79,11 +88,60 @@ Target "Publish" (fun _ ->
     Paket.Push (fun p -> {p with WorkingDir = artifactsDir})
 )
 
+Description "Export test translations"
+Target "ExportPot" (fun _ ->
+    let exportTool = findToolInSubPath "Translatable.Export.exe" (sourceDir @@ "Translatable.Export/bin/Release/")
+    let outputPath = languageDir @@ "messages.pot"
+    
+    let assemblies = !! (sourceDir @@ "TranslationTest/bin/Release/TranslationTest.exe")
+                     |> Seq.toList
+                     |> List.fold (fun str assembly -> sprintf "%s \"%s\"" str assembly) ""
+    
+    let argumentString = sprintf "--outputfile \"%s\" %s" outputPath assemblies
+
+    execProcessOrFail exportTool argumentString
+)
+
+Description "Update po files with pots"
+Target "UpdatePoFiles" (fun _ ->
+    let msgmerge = findToolInSubPath "msgmerge.exe" "packages/build"
+    
+    !! (languageDir </> "*.pot")
+    |> Seq.iter (fun potFile ->
+        let poFilename = Path.ChangeExtension(Path.GetFileName(potFile), "po")
+        !! (languageDir @@ "**/" + poFilename)
+        |> Seq.iter (fun poFile ->
+            tracefn "Updating %s with %s" poFile potFile
+            execProcessOrFail msgmerge (sprintf "--previous \"%s\" \"%s\" --output-file=\"%s\"" poFile potFile poFile)
+        )
+    )
+)
+
+Description "Compile mo files"
+Target "CompileMoFiles" (fun _ ->
+    let msgfmt = findToolInSubPath "msgfmt.exe" "packages/build"
+
+    !! (languageDir </> "**/*.po")
+    |> Seq.iter (fun poFile ->
+        let moFile = Path.ChangeExtension(poFile, "mo")
+
+        tracefn "Compiling %s" poFile
+
+        let argString = sprintf "-o %s %s" moFile poFile
+        execProcessOrFail msgfmt argString
+    )
+)
+
 "Clean"
    ==> "SetAssemblyVersion"
    ==> "SetAssemblyInfoYear"
    ==> "Compile"
    ==> "Pack"
    ==> "Publish"
+
+"Compile"
+   ==> "ExportPot"
+   ==> "UpdatePoFiles"
+   ==> "CompileMoFiles"
 
 RunTargetOrDefault "Pack"

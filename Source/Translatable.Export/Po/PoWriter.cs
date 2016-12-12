@@ -8,9 +8,9 @@ namespace Translatable.Export.Po
     {
         public void WritePotFile(string filename, Catalog catalog)
         {
-            using (var s = File.OpenWrite(filename))
+            using (var s = File.Open(filename, FileMode.Truncate))
             {
-                using (var output = new StreamWriter(s, Encoding.UTF8))
+                using (var output = new StreamWriter(s, new UTF8Encoding(false)))
                 {
                     output.WriteLine("msgid \"\"");
                     output.WriteLine("msgstr \"\"");

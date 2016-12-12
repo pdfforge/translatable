@@ -1,0 +1,27 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8"
+
+#: Translatable.TranslationTest.MainWindowTranslation
+msgid "Main window title"
+msgstr ""
+
+#: Translatable.TranslationTest.MainWindowTranslation
+msgid "This is my content\nwith multiple lines"
+msgstr ""
+
+#: Translatable.TranslationTest.MainWindowTranslation
+msgid "Messages"
+msgstr ""
+
+#: Translatable.TranslationTest.MainWindowTranslation
+msgid "You have {0} new message"
+msgid_plural "You have {0} new messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#. This page is intentionally left blank
+#: Translatable.TranslationTest.MainWindowTranslation
+msgid "This translation might be \"missing\""
+msgstr ""
+

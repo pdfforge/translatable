@@ -11,7 +11,8 @@ namespace Translatable.Export
     {
         public void DoExport(ExportOptions exportOptions)
         {
-            var outputDirectory = Path.GetFullPath(exportOptions.OutputPath);
+            var potFile = Path.GetFullPath(exportOptions.OutputFile);
+            var outputDirectory = Path.GetDirectoryName(potFile);
 
             if (!Directory.Exists(outputDirectory))
                 Directory.CreateDirectory(outputDirectory);
@@ -30,7 +31,6 @@ namespace Translatable.Export
 
             var writer = new PotWriter();
 
-            var potFile = Path.Combine(outputDirectory, "messages.pot");
             writer.WritePotFile(potFile, catalog);
         }
 
@@ -96,7 +96,11 @@ namespace Translatable.Export
 
         private string EscapeString(string str)
         {
-            return str.Replace("\r", "\\r").Replace("\n", "\\n");
+            return str
+                .Replace("\\", "\\\\")
+                .Replace("\"", "\\\"")
+                .Replace("\r\n", "\n")
+                .Replace("\n", "\\n");
         }
 
         private string GetTranslatorComment(PropertyInfo pi)

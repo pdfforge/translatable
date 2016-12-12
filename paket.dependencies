@@ -7,3 +7,4 @@ nuget CommandLineParser >= 2.0 prerelease
 group build
     source http://nuget.pdfforge.org/api/odata
     nuget FAKE
+    nuget Gettext.Tools

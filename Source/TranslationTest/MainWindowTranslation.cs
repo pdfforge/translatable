@@ -6,14 +6,14 @@
 
         public string Title { get; private set; } = "Main window title";
 
-        public string SampleText { get; private set; } = "This is my content";
+        public string SampleText { get; private set; } = "This is my content\nwith multiple lines";
 
         public string Messages { get; private set; } = "Messages";
 
         private string[] NewMessagesText { get; set; } = {"You have {0} new message", "You have {0} new messages"};
         
         [TranslatorComment("This page is intentionally left blank")]
-        public string MissingTranslation { get; set; } = "This translation might be missing";
+        public string MissingTranslation { get; set; } = "This translation might be \"missing\"";
 
         public string FormatMessageText(int messages)
         {

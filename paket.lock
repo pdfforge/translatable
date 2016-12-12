@@ -8,3 +8,4 @@ GROUP build
 NUGET
   remote: http://nuget.pdfforge.org/api/odata
     FAKE (4.46.0)
+    Gettext.Tools (0.19.8.1)

@@ -5,7 +5,7 @@ include-pdbs true
 files
 	bin/Release/CommandLine.dll => tools
 	bin/Release/Translatable*.dll => tools
-	bin/Release/TranslationExport.exe => tools
+	bin/Release/Translatable.Export.exe => tools
 
 description
 	The Translatable project has the goal to make creating type-safe 
