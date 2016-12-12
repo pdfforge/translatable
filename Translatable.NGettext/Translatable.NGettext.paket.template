@@ -1,0 +1,17 @@
+﻿type project
+authors pdfforge GmbH
+include-pdbs true
+
+dependencies
+	Translatable > 0.0
+	NGettext = LOCKEDVERSION
+
+references
+	Translatable.NGettext.dll
+
+description
+	The Translatable project has the goal to make creating type-safe 
+	translation objects easy.
+	
+	The NGettext source implements this by allowing to use GNU gettext
+	MO files as source for the translations.

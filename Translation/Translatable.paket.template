@@ -1,0 +1,10 @@
+﻿type project
+authors pdfforge GmbH
+include-pdbs true
+
+references
+	Translatable.dll
+
+description
+	The Translatable project has the goal to make creating type-safe 
+	translation objects easy.

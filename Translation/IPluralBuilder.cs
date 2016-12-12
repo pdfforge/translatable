@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Translation
+namespace Translatable
 {
     public interface IPluralBuilder
     {

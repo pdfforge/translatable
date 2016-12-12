@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Translation;
-
-namespace TranslationTest
+﻿namespace Translatable.TranslationTest
 {
     public class MainWindowTranslation : ITranslatable
     {

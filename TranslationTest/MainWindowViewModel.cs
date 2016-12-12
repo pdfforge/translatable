@@ -1,27 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Translation;
+using NGettext;
+using Translatable.NGettext;
 
-namespace TranslationTest
+namespace Translatable.TranslationTest
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        public MainWindowTranslation Translation { get; private set; }
+        private const string MoDomain = "messages";
+        private readonly string _translationFolder;
+
+        private CultureInfo _language;
+
+        private int _messages;
         private TranslationFactory _translationFactory;
 
         public MainWindowViewModel()
         {
-            var translationFolder = GetTranslationFolder();
+            _translationFolder = GetTranslationFolder();
 
-            LoadLanguages(translationFolder);
-            
-            _translationFactory = new TranslationFactory(translationFolder);
+            if (_translationFolder != null)
+                LoadLanguages(_translationFolder);
+
             Language = new CultureInfo("en-US");
+        }
 
+        public MainWindowTranslation Translation { get; private set; }
+
+        public int Messages
+        {
+            get { return _messages; }
+            set
+            {
+                _messages = value;
+                RaisePropertyChanged(nameof(MessageText));
+            }
+        }
+
+        public IList<CultureInfo> Languages { get; set; } = new List<CultureInfo>();
+
+        public CultureInfo Language
+        {
+            get { return _language; }
+            set
+            {
+                _language = value;
+                SetLanguage(value);
+                Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
+                RaisePropertyChanged(nameof(Translation));
+                RaisePropertyChanged(nameof(MessageText));
+            }
+        }
+
+        public string MessageText => Translation.FormatMessageText(_messages);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void SetLanguage(CultureInfo cultureInfo)
+        {
+            if (_translationFolder == null)
+            {
+                _translationFactory = new TranslationFactory(new GettextTranslationSource(new Catalog()));
+                return;
+            }
+
+            var translationSource = new GettextTranslationSource(_translationFolder, MoDomain, cultureInfo);
+            _translationFactory = new TranslationFactory(translationSource);
+            _language = cultureInfo;
         }
 
         private string GetTranslationFolder()
@@ -33,10 +81,8 @@ namespace TranslationTest
             };
 
             foreach (var candidate in candidates)
-            {
                 if (Directory.Exists(candidate))
                     return Path.GetFullPath(candidate);
-            }
 
             return null;
         }
@@ -48,46 +94,20 @@ namespace TranslationTest
 
             foreach (var directory in Directory.EnumerateDirectories(translationFolder))
             {
-                var cultureName = Path.GetFileName(directory);
-                var cultureInfo = CultureInfo.GetCultureInfo(cultureName);
-                if (cultureInfo != null)
+                if (!Directory.EnumerateFiles(directory, "*.mo", SearchOption.AllDirectories).Any())
+                    continue;
+
+                try
+                {
+                    var cultureName = Path.GetFileName(directory);
+                    var cultureInfo = CultureInfo.GetCultureInfo(cultureName);
                     Languages.Add(cultureInfo);
+                }
+                catch (CultureNotFoundException)
+                {
+                }
             }
         }
-
-        private int _messages;
-        public int Messages
-        {
-            get
-            {
-                return _messages;
-            }
-            set
-            {
-                _messages = value;
-                RaisePropertyChanged(nameof(MessageText));
-            }
-        }
-
-        public IList<CultureInfo> Languages { get; set; } = new List<CultureInfo>();
-
-        private CultureInfo _language;
-        public CultureInfo Language
-        {
-            get { return _language; }
-            set
-            {
-                _language = value;
-                _translationFactory.SetLanguage(value);
-                Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
-                RaisePropertyChanged(nameof(Translation));
-                RaisePropertyChanged(nameof(MessageText));
-            }
-        }
-
-        public string MessageText => Translation.FormatMessageText(_messages);
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChanged(string propertyName)
         {

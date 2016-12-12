@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Translation;
-using TranslationExport.Po;
+using Translatable.Export.Po;
 
-namespace TranslationExport
+namespace Translatable.Export
 {
     class Exporter
     {
@@ -69,7 +68,7 @@ namespace TranslationExport
 
                 if (property.PropertyType == typeof(string))
                 {
-                    var escapedMessage = EscapeString(property.GetValue(obj).ToString());
+                    var escapedMessage = EscapeString(property.GetValue(obj, null).ToString());
 
                     catalog.AddEntry(escapedMessage, comment, translatable.FullName);
 
@@ -78,7 +77,7 @@ namespace TranslationExport
 
                 if (property.PropertyType == typeof(string[]))
                 {
-                    var value = (string[]) property.GetValue(obj);
+                    var value = (string[]) property.GetValue(obj, null);
 
                     if (value.Length != 2)
                         throw new InvalidDataException($"The plural string for {property.Name} must contain two strings: a singular and a plural form. It contained {value.Length} strings.");

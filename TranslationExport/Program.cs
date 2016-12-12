@@ -1,7 +1,7 @@
 ﻿using System;
 using CommandLine;
 
-namespace TranslationExport
+namespace Translatable.Export
 {
     class Program
     {

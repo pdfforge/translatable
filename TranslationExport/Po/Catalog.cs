@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace TranslationExport.Po
+namespace Translatable.Export.Po
 {
     public class Catalog
     {

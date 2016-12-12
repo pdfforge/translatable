@@ -1,0 +1,10 @@
+﻿type project
+authors pdfforge GmbH
+include-pdbs true
+
+description
+	The Translatable project has the goal to make creating type-safe 
+	translation objects easy.
+
+	The Export package allows to analyze assemblies for instances
+	of ITranslatable and export the POT files based on that.
