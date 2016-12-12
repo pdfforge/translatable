@@ -4,9 +4,8 @@ namespace Translatable.Export.Po
 {
     public class PoEntry
     {
+        public readonly IList<string> SourceReferences = new List<string>();
         public string Comment { get; set; }
-        public IList<string> SourceReferences = new List<string>();
-
     }
 
     public class SingularEntry : PoEntry

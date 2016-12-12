@@ -99,7 +99,7 @@
       <Project>{d97bec38-c1dd-4803-8d52-71e2f2128f85}</Project>
       <Name>Translatable.NGettext</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Translation\Translatable.csproj">
+    <ProjectReference Include="..\Translatable\Translatable.csproj">
       <Project>{76170e37-ab54-46d2-ac26-8ffa71591e37}</Project>
       <Name>Translatable</Name>
     </ProjectReference>

@@ -20,9 +20,7 @@ namespace Translatable.Export.Po
                     foreach (var poEntry in catalog.Entries)
                     {
                         if (!string.IsNullOrWhiteSpace(poEntry.Comment))
-                        {
                             output.WriteLine($"#. {poEntry.Comment}");
-                        }
 
                         if (poEntry.SourceReferences.Any())
                         {
@@ -46,7 +44,6 @@ namespace Translatable.Export.Po
                             output.WriteLine("msgstr[1] \"\"");
                             output.WriteLine();
                         }
-                        
                     }
                 }
             }
