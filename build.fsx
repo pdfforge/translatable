@@ -18,7 +18,7 @@ let packageVersion = sprintf "%s%s" fullVersion buildSuffix
 let buildDir = "build"
 let artifactsDir = buildDir </> "artifacts"
 let sourceDir = "Source"
-let languageDir = sourceDir @@ "TranslationTest/Languages"
+let languageDir = sourceDir </> "TranslationTest/Languages"
 
 open System
 open System.IO
@@ -48,7 +48,7 @@ Target "Clean" (fun _ ->
 
 Description "Update the assembly version number"
 Target "SetAssemblyVersion" (fun _ ->
-    !! (sourceDir @@ "**/AssemblyInfo.cs")
+    !! (sourceDir </> "**/AssemblyInfo.cs")
     |> Seq.iter (fun f ->
       trace f 
       ReplaceAssemblyInfoVersions (fun p ->
@@ -61,7 +61,7 @@ Target "SetAssemblyVersion" (fun _ ->
 
 Description "Update the assembly copyright year"
 Target "SetAssemblyInfoYear" (fun _ ->
-    !! (sourceDir @@ "**/AssemblyInfo.cs")
+    !! (sourceDir </> "**/AssemblyInfo.cs")
     |> Seq.iter (fun f ->
       trace f 
       ReplaceAssemblyInfoVersions (fun p ->
@@ -73,7 +73,7 @@ Target "SetAssemblyInfoYear" (fun _ ->
 
 Description "Compile all C# projects"
 Target "Compile" (fun _ ->
-    !! (sourceDir @@ "**/*.csproj")
+    !! (sourceDir </> "**/*.csproj")
       |> MSBuildRelease "" "Rebuild"
       |> Log "Build-Output: "
 )
@@ -90,10 +90,10 @@ Target "Publish" (fun _ ->
 
 Description "Export test translations"
 Target "ExportPot" (fun _ ->
-    let exportTool = findToolInSubPath "Translatable.Export.exe" (sourceDir @@ "Translatable.Export/bin/Release/")
-    let outputPath = languageDir @@ "messages.pot"
+    let exportTool = findToolInSubPath "Translatable.Export.exe" (sourceDir </> "Translatable.Export/bin/Release/")
+    let outputPath = languageDir </> "messages.pot"
     
-    let assemblies = !! (sourceDir @@ "TranslationTest/bin/Release/TranslationTest.exe")
+    let assemblies = !! (sourceDir </> "TranslationTest/bin/Release/TranslationTest.exe")
                      |> Seq.toList
                      |> List.fold (fun str assembly -> sprintf "%s \"%s\"" str assembly) ""
     
@@ -109,7 +109,7 @@ Target "UpdatePoFiles" (fun _ ->
     !! (languageDir </> "*.pot")
     |> Seq.iter (fun potFile ->
         let poFilename = Path.ChangeExtension(Path.GetFileName(potFile), "po")
-        !! (languageDir @@ "**/" + poFilename)
+        !! (languageDir </> "**/" + poFilename)
         |> Seq.iter (fun poFile ->
             tracefn "Updating %s with %s" poFile potFile
             execProcessOrFail msgmerge (sprintf "--previous \"%s\" \"%s\" --output-file=\"%s\"" poFile potFile poFile)
