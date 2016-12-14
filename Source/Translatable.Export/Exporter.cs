@@ -9,29 +9,66 @@ namespace Translatable.Export
 {
     class Exporter
     {
+        private IList<Assembly> _assemblies;
+
         public void DoExport(ExportOptions exportOptions)
         {
-            var potFile = Path.GetFullPath(exportOptions.OutputFile);
-            var outputDirectory = Path.GetDirectoryName(potFile);
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-            if (!Directory.Exists(outputDirectory))
-                Directory.CreateDirectory(outputDirectory);
+            try
+            {
+                var potFile = Path.GetFullPath(exportOptions.OutputFile);
+                var outputDirectory = Path.GetDirectoryName(potFile);
 
-            var assemblies = LoadAssemblies(exportOptions.Assemblies);
+                if (!Directory.Exists(outputDirectory))
+                    Directory.CreateDirectory(outputDirectory);
 
-            var translatableType = typeof(ITranslatable);
-            var translatables = assemblies
-                .SelectMany(s => s.GetTypes())
-                .Where(t => translatableType.IsAssignableFrom(t) && !t.IsAbstract).ToList();
+                _assemblies = LoadAssemblies(exportOptions.Assemblies).ToList();
 
-            var catalog = new Catalog();
+                var translatableType = typeof(ITranslatable);
+                var translatables = _assemblies
+                    .SelectMany(s => s.GetTypes())
+                    .Where(t => translatableType.IsAssignableFrom(t) && !t.IsAbstract).ToList();
 
-            foreach (var translatable in translatables)
-                Export(translatable, catalog);
+                var catalog = new Catalog();
 
-            var writer = new PotWriter();
+                foreach (var translatable in translatables)
+                    Export(translatable, catalog);
 
-            writer.WritePotFile(potFile, catalog);
+                var writer = new PotWriter();
+
+                writer.WritePotFile(potFile, catalog);
+
+            }
+            finally
+            {
+                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
+            }
+        }
+
+        private Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var domain = (AppDomain)sender;
+
+            foreach (var assembly in domain.GetAssemblies())
+            {
+                if (assembly.FullName == args.Name)
+                {
+                    return assembly;
+                }
+            }
+
+            var first = _assemblies.First();
+
+            var assemblyName = args.Name.Split(new[] {','}, StringSplitOptions.None)[0];
+            var uri = new UriBuilder(first.CodeBase);
+            var assemblyFolder = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
+            var assemblyPath = Path.Combine(assemblyFolder, assemblyName + ".dll");
+
+            if (File.Exists(assemblyPath))
+                return Assembly.LoadFile(assemblyPath);
+
+            return null;
         }
 
         private IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> assemblyFiles)

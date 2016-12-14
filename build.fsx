@@ -2,7 +2,7 @@
 
 open Fake
 
-let version = "0.1.0"
+let version = "0.1.1"
 let buildNumber = match buildServer with
                      | TeamCity -> environVarOrFail "BUILD_NUMBER"
                      | GitLabCI -> environVarOrFail "CI_PIPELINE_ID"

@@ -8,7 +8,7 @@ namespace Translatable.Export.Po
     {
         public void WritePotFile(string filename, Catalog catalog)
         {
-            using (var s = File.Open(filename, FileMode.Truncate))
+            using (var s = File.Create(filename))
             {
                 using (var output = new StreamWriter(s, new UTF8Encoding(false)))
                 {
