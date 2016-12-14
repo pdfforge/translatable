@@ -20,7 +20,7 @@ namespace Translatable
     /// </summary>
     public class TranslationFactory : ITranslationFactory
     {
-        private readonly ITranslationSource _translationSource;
+        public ITranslationSource TranslationSource { get; set; }
 
         /// <summary>
         /// Create a new TranslationFactory with the given ITranslationSource
@@ -28,7 +28,7 @@ namespace Translatable
         /// <param name="translationSource">The source that will be used to look up all translations</param>
         public TranslationFactory(ITranslationSource translationSource = null)
         {
-            _translationSource = translationSource;
+            TranslationSource = translationSource;
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace Translatable
         {
             var instance = Activator.CreateInstance<T>();
 
-            if (_translationSource != null)
-                Translate(instance, _translationSource);
+            if (TranslationSource != null)
+                Translate(instance, TranslationSource);
 
             return instance;
         }
