@@ -11,7 +11,14 @@ namespace Translatable
         /// </summary>
         /// <typeparam name="T">The type that will be analyzed and translated</typeparam>
         /// <returns>A translated instance of T</returns>
-        T CreateTranslation<T>() where T: ITranslatable;
+        T CreateTranslation<T>() where T: ITranslatable, new();
+
+        /// <summary>
+        /// Creates a translated instance of the type t using reflection and the given ITranslationSource
+        /// </summary>
+        /// <param name="t">The type to instantiate. It has to be derived from ITranslatable and must be </param>
+        /// <returns></returns>
+        ITranslatable CreateTranslation(Type t);
     }
 
     /// <summary>
@@ -36,9 +43,24 @@ namespace Translatable
         /// </summary>
         /// <typeparam name="T">The type that will be analyzed and translated</typeparam>
         /// <returns>A translated instance of T</returns>
-        public T CreateTranslation<T>() where T: ITranslatable
+        public T CreateTranslation<T>() where T: ITranslatable, new()
         {
             var instance = Activator.CreateInstance<T>();
+
+            if (TranslationSource != null)
+                Translate(instance, TranslationSource);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Creates a translated instance of the type t using reflection and the given ITranslationSource
+        /// </summary>
+        /// <param name="t">The type to instantiate. It has to be derived from ITranslatable and must be </param>
+        /// <returns></returns>
+        public ITranslatable CreateTranslation(Type t)
+        {
+            var instance = (ITranslatable)Activator.CreateInstance(t);
 
             if (TranslationSource != null)
                 Translate(instance, TranslationSource);
@@ -60,24 +82,13 @@ namespace Translatable
                     continue;
 
                 if (property.PropertyType == typeof(string))
-                {
                     SetStringProperty(o, property, translationSource);
-                    continue;
-                }
 
                 if (property.PropertyType == typeof(string[]))
-                {
                     SetStringArrayProperty(o, property, pluralBuilder, translationSource);
-                    continue;
-                }
 
                 if (property.PropertyType == typeof(IPluralBuilder))
-                {
                     SetPluralbuilderProperty(o, property, pluralBuilder);
-                    continue;
-                }
-
-                throw new InvalidOperationException($"The type {property.PropertyType} is not supported in ITranslatables.");
             }
         }
 

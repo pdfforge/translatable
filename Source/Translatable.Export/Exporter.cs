@@ -116,6 +116,12 @@ namespace Translatable.Export
                 if (property.PropertyType.IsAssignableFrom(typeof(IPluralBuilder)))
                     continue;
 
+                if (!property.CanRead)
+                    throw new InvalidOperationException($"The property {property.Name} in type {translatable.FullName} is not readable!");
+
+                if (!property.CanWrite)
+                    throw new InvalidOperationException($"The property {property.Name} in type {translatable.FullName} is not writable!");
+
                 var comment = GetTranslatorComment(property);
 
                 if (property.PropertyType == typeof(string))
@@ -142,7 +148,7 @@ namespace Translatable.Export
                     continue;
                 }
 
-                throw new InvalidOperationException($"The type {property.PropertyType} is not supported in ITranslatables.");
+                throw new InvalidOperationException($"The type {property.PropertyType} in {translatable.FullName}.{property.Name} is not supported in ITranslatables.");
             }
         }
 
