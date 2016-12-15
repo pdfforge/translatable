@@ -13,8 +13,19 @@ namespace Translatable.Export
             var exitCode = result
               .MapResult(options =>
               {
-                  exporter.DoExport(options);
-                  return 0;
+                  var resultCode = exporter.DoExport(options);
+
+                  switch (resultCode)
+                  {
+                      case ResultCode.NoTranslationsFound:
+                          Console.WriteLine("No translatable strings were found!");
+                          break;
+                      case ResultCode.NoTranslatablesFound:
+                          Console.WriteLine("No classes were found that implement ITranslatable. Please check if the correct assemblied were referenced!");
+                          break;
+                  }
+
+                  return (int)resultCode;
               },
                   errors => 1);
             Environment.ExitCode = exitCode;

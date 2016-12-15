@@ -7,11 +7,18 @@ using Translatable.Export.Po;
 
 namespace Translatable.Export
 {
+    public enum ResultCode
+    {
+        Success,
+        NoTranslatablesFound,
+        NoTranslationsFound
+    }
+
     class Exporter
     {
         private IList<Assembly> _assemblies;
 
-        public void DoExport(ExportOptions exportOptions)
+        public ResultCode DoExport(ExportOptions exportOptions)
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
@@ -30,10 +37,16 @@ namespace Translatable.Export
                     .SelectMany(s => s.GetTypes())
                     .Where(t => translatableType.IsAssignableFrom(t) && !t.IsAbstract).ToList();
 
+                if (!translatables.Any())
+                    return ResultCode.NoTranslationsFound;
+
                 var catalog = new Catalog();
 
                 foreach (var translatable in translatables)
                     Export(translatable, catalog);
+
+                if (!catalog.Entries.Any())
+                    return ResultCode.NoTranslationsFound;
 
                 var writer = new PotWriter();
 
@@ -44,6 +57,8 @@ namespace Translatable.Export
             {
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
             }
+
+            return ResultCode.Success;
         }
 
         private Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
