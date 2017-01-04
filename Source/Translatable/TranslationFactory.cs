@@ -146,7 +146,7 @@ namespace Translatable
                 try
                 {
                     var msgid = TranslationAttribute.GetValue(value);
-                    var translation = TranslationSource.GetTranslation(msgid);
+                    var translation = GetTranslation(msgid);
                     values.Add(new EnumTranslation<T>(translation, value));
                 }
                 catch (ArgumentException)
@@ -156,6 +156,14 @@ namespace Translatable
             }
 
             return values;
+        }
+
+        private string GetTranslation(string msgId)
+        {
+            if (TranslationSource == null)
+                return msgId;
+            return TranslationSource.GetTranslation(msgId);
+            ;
         }
     }
 }
