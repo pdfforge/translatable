@@ -17,6 +17,7 @@ namespace Translatable.TranslationTest
 
         private int _messages;
         private TranslationFactory _translationFactory;
+        private TestEnum _selectedTestEnum;
 
         public MainWindowViewModel()
         {
@@ -26,9 +27,19 @@ namespace Translatable.TranslationTest
                 LoadLanguages(_translationFolder);
 
             Language = new CultureInfo("en-US");
+
+            SelectedTestEnum = TestEnum.FirstValue;
         }
 
         public MainWindowTranslation Translation { get; private set; }
+
+        public IList<EnumTranslation<TestEnum>> EnumValue { get; private set; }
+
+        public TestEnum SelectedTestEnum
+        {
+            get { return _selectedTestEnum; }
+            set { _selectedTestEnum = value; RaisePropertyChanged(nameof(SelectedTestEnum)); }
+        }
 
         public int Messages
         {
@@ -50,8 +61,13 @@ namespace Translatable.TranslationTest
                 _language = value;
                 SetLanguage(value);
                 Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
+                var selected = SelectedTestEnum;
+                EnumValue = _translationFactory.CreateEnumTranslation<TestEnum>();
                 RaisePropertyChanged(nameof(Translation));
+                RaisePropertyChanged(nameof(EnumValue));
                 RaisePropertyChanged(nameof(MessageText));
+
+                SelectedTestEnum = selected;
             }
         }
 

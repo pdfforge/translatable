@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Translatable
@@ -19,6 +21,13 @@ namespace Translatable
         /// <param name="t">The type to instantiate. It has to be derived from ITranslatable and must be </param>
         /// <returns></returns>
         ITranslatable CreateTranslation(Type t);
+
+        /// <summary>
+        /// Creates a list of translations for a given enum type. This can be used to display translated enum values to the user.
+        /// </summary>
+        /// <typeparam name="T">The type that will be analyzed and translated</typeparam>
+        /// <returns>A list of translations of the enum T</returns>
+        IList<EnumTranslation<T>> CreateEnumTranslation<T>() where T : struct, IConvertible;
     }
 
     /// <summary>
@@ -118,6 +127,35 @@ namespace Translatable
 
             if (translations.Length == pluralBuilder.NumberOfPlurals)
                 property.SetValue(o, translations, null);
+        }
+
+        public IList<EnumTranslation<T>> CreateEnumTranslation<T>() where T : struct, IConvertible
+        {
+            var type = typeof(T);
+
+            if (!type.IsEnum)
+                throw new InvalidOperationException($"The type {type.Name} has to be an enum.");
+
+            if (!type.IsDefined(typeof(TranslatableAttribute), false))
+                throw new InvalidOperationException($"The type {type.Name} is no translatable enum! Add the Attribute Translatable to the enum declaration.");
+
+            var values = new List<EnumTranslation<T>>();
+
+            foreach (var value in Enum.GetValues(type).Cast<T>())
+            {
+                try
+                {
+                    var msgid = TranslationAttribute.GetValue(value);
+                    var translation = TranslationSource.GetTranslation(msgid);
+                    values.Add(new EnumTranslation<T>(translation, value));
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidOperationException($"The value {value} in enum {type.Name} does not have the [Translation] attribute. This is required to make it translatable.");
+                }
+            }
+
+            return values;
         }
     }
 }

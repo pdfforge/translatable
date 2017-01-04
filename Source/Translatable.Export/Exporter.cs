@@ -37,13 +37,23 @@ namespace Translatable.Export
                     .SelectMany(s => s.GetTypes())
                     .Where(t => translatableType.IsAssignableFrom(t) && !t.IsAbstract).ToList();
 
-                if (!translatables.Any())
+                var enums = _assemblies
+                    .SelectMany(s => s.GetTypes())
+                    .Where(t => t.IsEnum && t.IsDefined(typeof(TranslatableAttribute), false))
+                    .ToList();
+
+                if (!translatables.Any() && !enums.Any())
                     return ResultCode.NoTranslationsFound;
 
                 var catalog = new Catalog();
 
                 foreach (var translatable in translatables)
-                    Export(translatable, catalog);
+                    ExportClass(translatable, catalog);
+
+                foreach (var type in enums)
+                {
+                    ExportEnum(type, catalog);
+                }
 
                 if (!catalog.Entries.Any())
                     return ResultCode.NoTranslationsFound;
@@ -105,7 +115,7 @@ namespace Translatable.Export
             return assemblies;
         }
 
-        private void Export(Type translatable, Catalog catalog)
+        private void ExportClass(Type translatable, Catalog catalog)
         {
             var properties = translatable.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -152,6 +162,28 @@ namespace Translatable.Export
             }
         }
 
+        private void ExportEnum(Type type, Catalog catalog)
+        {
+            if (!type.IsDefined(typeof(TranslatableAttribute), false))
+                throw new InvalidOperationException("The type is no translatable enum! Add the Attribute Translatable to the enum declaration.");
+
+            foreach (var value in Enum.GetValues(type))
+            {
+                try
+                {
+                    var msgid = TranslationAttribute.GetValue(value);
+                    var escapedMessage = EscapeString(msgid);
+                    var comment = GetTranslatorComment(value);
+
+                    catalog.AddEntry(escapedMessage, comment, type.FullName);
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidOperationException($"The value {value} in enum {type.Name} does not have the [Translation] attribute. This is required to make it translatable.");
+                }
+            }
+        }
+
         private string EscapeString(string str)
         {
             return str
@@ -168,6 +200,18 @@ namespace Translatable.Export
             if (attributes != null && attributes.Length > 0)
                 return attributes[0].Value;
 
+            return "";
+        }
+
+        private string GetTranslatorComment(object value)
+        {
+            try
+            {
+                return TranslatorCommentAttribute.GetValue(value);
+            }
+            catch (ArgumentException)
+            {
+            }
             return "";
         }
     }

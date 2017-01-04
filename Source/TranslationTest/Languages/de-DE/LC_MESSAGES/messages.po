@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.11\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: Translatable.TranslationTest.MainWindowTranslation
@@ -17,12 +17,12 @@ msgid "Main window title"
 msgstr "Hauptfenster-Titel"
 
 #: Translatable.TranslationTest.MainWindowTranslation
-#, fuzzy
-#| msgid "This is my content"
 msgid ""
 "This is my content\n"
 "with multiple lines"
-msgstr "Dies ist mein Inhalt"
+msgstr ""
+"Dies ist mein Inhalt\n"
+"mit mehreren Zeilen"
 
 #: Translatable.TranslationTest.MainWindowTranslation
 msgid "Messages"
@@ -38,3 +38,15 @@ msgstr[1] "Sie haben {0} neue Nachrichten"
 #: Translatable.TranslationTest.MainWindowTranslation
 msgid "This translation might be \"missing\""
 msgstr ""
+
+#: Translatable.TranslationTest.TestEnum
+msgid "This is the first value"
+msgstr "Dies ist der erste Wert"
+
+#: Translatable.TranslationTest.TestEnum
+msgid "This is the second value"
+msgstr "Dies ist der zweite Wert"
+
+#: Translatable.TranslationTest.TestEnum
+msgid "This is some extraordinary third value!"
+msgstr "Dies ist ein besonderer dritter Wert!"

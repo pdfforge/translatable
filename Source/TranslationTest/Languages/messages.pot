@@ -25,3 +25,15 @@ msgstr[1] ""
 msgid "This translation might be \"missing\""
 msgstr ""
 
+#: Translatable.TranslationTest.TestEnum
+msgid "This is the first value"
+msgstr ""
+
+#: Translatable.TranslationTest.TestEnum
+msgid "This is the second value"
+msgstr ""
+
+#: Translatable.TranslationTest.TestEnum
+msgid "This is some extraordinary third value!"
+msgstr ""
+

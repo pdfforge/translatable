@@ -15,6 +15,9 @@
         <TextBox Text="{Binding Messages, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="{Binding MessageText}" />
         <TextBlock Text="{Binding Translation.MissingTranslation}" />
+        <Label Content="Translated enum test" />
+        <ComboBox ItemsSource="{Binding EnumValue}" DisplayMemberPath="Translation" SelectedValuePath="Value"  SelectedValue="{Binding SelectedTestEnum}" />
+        <Label Content="Language" />
         <ComboBox SelectedItem="{Binding Language}" ItemsSource="{Binding Languages}" DisplayMemberPath="EnglishName" />
 
     </StackPanel>
