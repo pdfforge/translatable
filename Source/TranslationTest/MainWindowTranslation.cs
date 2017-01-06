@@ -15,6 +15,8 @@
         [TranslatorComment("This page is intentionally left blank")]
         public string MissingTranslation { get; set; } = "This translation might be \"missing\"";
 
+        public EnumTranslation<TestEnum>[] TestEnumTranslation { get; private set; } = EnumTranslation<TestEnum>.CreateDefaultEnumTranslation();
+
         public string FormatMessageText(int messages)
         {
             var translation = PluralBuilder.GetPlural(messages, NewMessagesText);

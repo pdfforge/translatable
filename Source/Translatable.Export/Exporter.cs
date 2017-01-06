@@ -11,7 +11,8 @@ namespace Translatable.Export
     {
         Success,
         NoTranslatablesFound,
-        NoTranslationsFound
+        NoTranslationsFound,
+        Error
     }
 
     class Exporter
@@ -62,6 +63,11 @@ namespace Translatable.Export
 
                 writer.WritePotFile(potFile, catalog);
 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex);
+                return ResultCode.Error;
             }
             finally
             {
@@ -155,6 +161,11 @@ namespace Translatable.Export
 
                     catalog.AddPluralEntry(escapedSingular, escapedPlural, comment, translatable.FullName);
 
+                    continue;
+                }
+
+                if (property.PropertyType.IsArray && property.PropertyType.GetElementType().Name == typeof(EnumTranslation<>).Name)
+                {
                     continue;
                 }
 

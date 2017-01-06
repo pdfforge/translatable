@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace Translatable
@@ -27,7 +25,7 @@ namespace Translatable
         /// </summary>
         /// <typeparam name="T">The type that will be analyzed and translated</typeparam>
         /// <returns>A list of translations of the enum T</returns>
-        IList<EnumTranslation<T>> CreateEnumTranslation<T>() where T : struct, IConvertible;
+        EnumTranslation<T>[] CreateEnumTranslation<T>() where T : struct, IConvertible;
     }
 
     /// <summary>
@@ -96,6 +94,9 @@ namespace Translatable
                 if (property.PropertyType == typeof(string[]))
                     SetStringArrayProperty(o, property, pluralBuilder, translationSource);
 
+                if (property.PropertyType.IsArray && property.PropertyType.GetElementType().Name == typeof(EnumTranslation<>).Name)
+                    SetEnumArrayProperty(o, property, translationSource);
+
                 if (property.PropertyType == typeof(IPluralBuilder))
                     SetPluralbuilderProperty(o, property, pluralBuilder);
             }
@@ -129,41 +130,29 @@ namespace Translatable
                 property.SetValue(o, translations, null);
         }
 
-        public IList<EnumTranslation<T>> CreateEnumTranslation<T>() where T : struct, IConvertible
+        private void SetEnumArrayProperty(ITranslatable o, PropertyInfo property, ITranslationSource translationSource)
         {
-            var type = typeof(T);
+            var propertyType = property.PropertyType.GetElementType();
+            var genericDefinition = propertyType.GetGenericTypeDefinition();
 
-            if (!type.IsEnum)
-                throw new InvalidOperationException($"The type {type.Name} has to be an enum.");
+            if (genericDefinition != typeof(EnumTranslation<>))
+                throw new InvalidDataException($"The property {property.Name} is not of the type EnumTranslation<>!");
 
-            if (!type.IsDefined(typeof(TranslatableAttribute), false))
-                throw new InvalidOperationException($"The type {type.Name} is no translatable enum! Add the Attribute Translatable to the enum declaration.");
+            // Type of the enum we would like to translate
+            var enumType = propertyType.GetGenericArguments()[0];
 
-            var values = new List<EnumTranslation<T>>();
+            // Use Reflection to find the CreateEnumTranslation method and bind the generic parameter
+            var method = GetType().GetMethod(nameof(CreateEnumTranslation));
+            var genericMethod = method.MakeGenericMethod(enumType);
 
-            foreach (var value in Enum.GetValues(type).Cast<T>())
-            {
-                try
-                {
-                    var msgid = TranslationAttribute.GetValue(value);
-                    var translation = GetTranslation(msgid);
-                    values.Add(new EnumTranslation<T>(translation, value));
-                }
-                catch (ArgumentException)
-                {
-                    throw new InvalidOperationException($"The value {value} in enum {type.Name} does not have the [Translation] attribute. This is required to make it translatable.");
-                }
-            }
+            var translations = genericMethod.Invoke(this, new object[] { });
 
-            return values;
+            property.SetValue(o, translations, null);
         }
 
-        private string GetTranslation(string msgId)
+        public EnumTranslation<T>[] CreateEnumTranslation<T>() where T : struct, IConvertible
         {
-            if (TranslationSource == null)
-                return msgId;
-            return TranslationSource.GetTranslation(msgId);
-            ;
+            return EnumTranslationFactory.CreateEnumTranslation<T>(TranslationSource);
         }
     }
 }

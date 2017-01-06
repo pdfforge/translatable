@@ -33,8 +33,6 @@ namespace Translatable.TranslationTest
 
         public MainWindowTranslation Translation { get; private set; }
 
-        public IList<EnumTranslation<TestEnum>> EnumValue { get; private set; }
-
         public TestEnum SelectedTestEnum
         {
             get { return _selectedTestEnum; }
@@ -62,9 +60,7 @@ namespace Translatable.TranslationTest
                 SetLanguage(value);
                 Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
                 var selected = SelectedTestEnum;
-                EnumValue = _translationFactory.CreateEnumTranslation<TestEnum>();
                 RaisePropertyChanged(nameof(Translation));
-                RaisePropertyChanged(nameof(EnumValue));
                 RaisePropertyChanged(nameof(MessageText));
 
                 SelectedTestEnum = selected;

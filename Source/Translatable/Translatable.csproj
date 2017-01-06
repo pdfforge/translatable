@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="DefaultPluralBuilder.cs" />
     <Compile Include="EnumTranslation.cs" />
+    <Compile Include="EnumTranslationFactory.cs" />
     <Compile Include="IPluralBuilder.cs" />
     <Compile Include="ITranslatable.cs" />
     <Compile Include="ITranslationSource.cs" />
