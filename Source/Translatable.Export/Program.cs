@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using CommandLine;
 
 namespace Translatable.Export
@@ -21,7 +22,7 @@ namespace Translatable.Export
                           Console.WriteLine("No translatable strings were found!");
                           break;
                       case ResultCode.NoTranslatablesFound:
-                          Console.WriteLine("No classes were found that implement ITranslatable. Please check if the correct assemblied were referenced!");
+                          Console.WriteLine("No classes were found that implement ITranslatable. Please check if the correct assemblies were referenced!");
                           break;
                   }
 
@@ -29,6 +30,9 @@ namespace Translatable.Export
               },
                   errors => 1);
             Environment.ExitCode = exitCode;
+
+            if (Debugger.IsAttached)
+                Console.Read();
         }
     }
 }

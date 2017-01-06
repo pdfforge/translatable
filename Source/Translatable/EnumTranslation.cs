@@ -11,8 +11,8 @@ namespace Translatable
             Value = value;
         }
 
-        public T Value { get; set; }
-        public string Translation { get; set; }
+        public T Value { get; }
+        public string Translation { get; }
 
         public static EnumTranslation<T>[] CreateDefaultEnumTranslation()
         {

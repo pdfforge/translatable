@@ -12,6 +12,10 @@ To use the export during you build script, you have to use the export package:
 
 ## Usage
 
+
+
+### Build your translation
+
 ```C#
 public class MainWindowTranslation : ITranslatable
 {

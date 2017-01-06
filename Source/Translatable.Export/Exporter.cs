@@ -166,6 +166,7 @@ namespace Translatable.Export
 
                 if (property.PropertyType.IsArray && property.PropertyType.GetElementType().Name == typeof(EnumTranslation<>).Name)
                 {
+                    // translatable enums will be exported by inspecting all enums with the TranslatableAttribute
                     continue;
                 }
 
@@ -200,7 +201,8 @@ namespace Translatable.Export
             return str
                 .Replace("\\", "\\\\")
                 .Replace("\"", "\\\"")
-                .Replace("\r\n", "\n")
+                .Replace("\t", "\\t")
+                .Replace("\r", "\\r")
                 .Replace("\n", "\\n");
         }
 

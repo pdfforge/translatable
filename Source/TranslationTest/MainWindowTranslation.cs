@@ -6,7 +6,7 @@
 
         public string Title { get; private set; } = "Main window title";
 
-        public string SampleText { get; private set; } = "This is my content\nwith multiple lines";
+        public string SampleText { get; private set; } = "This is my content\r\nwith multiple lines";
 
         public string Messages { get; private set; } = "Messages";
 

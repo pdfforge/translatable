@@ -7,7 +7,7 @@ msgid "Main window title"
 msgstr ""
 
 #: Translatable.TranslationTest.MainWindowTranslation
-msgid "This is my content\nwith multiple lines"
+msgid "This is my content\r\nwith multiple lines"
 msgstr ""
 
 #: Translatable.TranslationTest.MainWindowTranslation

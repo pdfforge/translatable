@@ -18,10 +18,10 @@ msgstr "Hauptfenster-Titel"
 
 #: Translatable.TranslationTest.MainWindowTranslation
 msgid ""
-"This is my content\n"
+"This is my content\r\n"
 "with multiple lines"
 msgstr ""
-"Dies ist mein Inhalt\n"
+"Dies ist mein Inhalt\r\n"
 "mit mehreren Zeilen"
 
 #: Translatable.TranslationTest.MainWindowTranslation
@@ -50,3 +50,10 @@ msgstr "Dies ist der zweite Wert"
 #: Translatable.TranslationTest.TestEnum
 msgid "This is some extraordinary third value!"
 msgstr "Dies ist ein besonderer dritter Wert!"
+
+#~ msgid ""
+#~ "This is my content\n"
+#~ "with multiple lines"
+#~ msgstr ""
+#~ "Dies ist Inhalt\n"
+#~ "mit mehreren Zeilen"
