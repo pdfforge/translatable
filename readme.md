@@ -14,8 +14,6 @@ To use the export during you build script, you have to use the export package:
 
 `PM> Install-Package Translatable.Export`
 
-**Note:** Make sure to use the same version of Translatable.Export and Translatable. As the package uses strong-named assemblies, the Exporter won't find classes that inherit from a different version of the `ITranslatable` interface.
-
 ## Motiviation
 
 `Translatable` uses (quite) plain C# classes and the PO/gettext ecosystem as proven technology for translations. This brings a lot of advantages:

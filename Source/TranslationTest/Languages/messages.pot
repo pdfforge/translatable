@@ -25,6 +25,7 @@ msgstr[1] ""
 msgid "This translation might be \"missing\""
 msgstr ""
 
+#. Test
 #: Translatable.TranslationTest.TestEnum
 msgid "This is the first value"
 msgstr ""

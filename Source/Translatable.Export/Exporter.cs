@@ -33,14 +33,16 @@ namespace Translatable.Export
 
                 _assemblies = LoadAssemblies(exportOptions.Assemblies).ToList();
 
-                var translatableType = typeof(ITranslatable);
-                var translatables = _assemblies
+                var allTypes = _assemblies
                     .SelectMany(s => s.GetTypes())
-                    .Where(t => translatableType.IsAssignableFrom(t) && !t.IsAbstract).ToList();
+                    .ToList();
 
-                var enums = _assemblies
-                    .SelectMany(s => s.GetTypes())
-                    .Where(t => t.IsEnum && t.IsDefined(typeof(TranslatableAttribute), false))
+                var translatables = allTypes
+                    .Where(TypeHelper.IsTranslatable)
+                    .ToList();
+
+                var enums = allTypes
+                    .Where(TypeHelper.HasTranslatableAttribute)
                     .ToList();
 
                 if (!translatables.Any() && !enums.Any())
@@ -129,7 +131,7 @@ namespace Translatable.Export
 
             foreach (var property in properties)
             {
-                if (property.PropertyType.IsAssignableFrom(typeof(IPluralBuilder)))
+                if (TypeHelper.IsType(property.PropertyType, typeof(IPluralBuilder)))
                     continue;
 
                 if (!property.CanRead)
@@ -138,7 +140,7 @@ namespace Translatable.Export
                 if (!property.CanWrite)
                     throw new InvalidOperationException($"The property {property.Name} in type {translatable.FullName} is not writable!");
 
-                var comment = GetTranslatorComment(property);
+                var comment = TypeHelper.GetTranslatorCommentAttributeValue(property);
 
                 if (property.PropertyType == typeof(string))
                 {
@@ -176,16 +178,16 @@ namespace Translatable.Export
 
         private void ExportEnum(Type type, Catalog catalog)
         {
-            if (!type.IsDefined(typeof(TranslatableAttribute), false))
+            if (!TypeHelper.HasTranslatableAttribute(type))
                 throw new InvalidOperationException("The type is no translatable enum! Add the Attribute Translatable to the enum declaration.");
 
             foreach (var value in Enum.GetValues(type))
             {
                 try
                 {
-                    var msgid = TranslationAttribute.GetValue(value);
+                    var msgid = TypeHelper.GetTranslationAttributeValue(value);
                     var escapedMessage = EscapeString(msgid);
-                    var comment = GetTranslatorComment(value);
+                    var comment = TypeHelper.GetEnumTranslatorCommentAttributeValue(value);
 
                     catalog.AddEntry(escapedMessage, comment, type.FullName);
                 }
