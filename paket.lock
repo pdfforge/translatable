@@ -3,9 +3,16 @@ NUGET
   remote: http://nuget.pdfforge.org/api/odata
     CommandLineParser (2.1.1-beta)
     NGettext (0.6.2)
+    Optional (3.2.0)
 
 GROUP build
 NUGET
   remote: http://nuget.pdfforge.org/api/odata
     FAKE (4.46.0)
     Gettext.Tools (0.19.8.1)
+    xunit.runner.console (2.1.0)
+
+GROUP test
+NUGET
+  remote: http://nuget.pdfforge.org/api/odata
+    xunit (1.9.2)

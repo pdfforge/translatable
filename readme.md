@@ -64,10 +64,92 @@ public enum MyEnum
 
 ### Export
 
+Exporting content is pretty easy. You run the export application and specify the pot file to create (with the argument `--outputfile` and a list of assemblies to scan).
+
+`> Translatable.Export.exe --outputfile <yourfile>.pot <assembly1> <assembly2> <assembly> ...`
+
+To export the translation for the test application, you can use this: (Please compile first!)
+
+`> Translatable.Export.exe --outputfile "Source\TranslationTest\Languages\messages.pot"  "Source\TranslationTest\bin\Debug\TranslationTest.exe"`
+
+You will receive a pot file, which will be used as a starting point to all translations. Basically, it is a po file without translation.
+
+```
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8"
+
+#: Translatable.TranslationTest.MainWindowTranslation
+msgid "Main window title"
+msgstr ""
+
+#: Translatable.TranslationTest.MainWindowTranslation
+msgid "This is my content\nwith multiple lines"
+msgstr ""
+
+(...)
+```
+
 ### Translate po files
+
+The translation process is not part of what `Translatable` does, but there are good specialized tools for this. In our workflow at [PDFCreator](https://www.pdfforge.org/pdfcreator), we start creating the translation classes, add it to our code and do the german translation locally. Then we start the application to see if the translation works, i.e. everything is translated as expected, nothing is missing etc.
+
+When we merge a change into the master, we push the translation to our [Weblate](https://weblate.org) instance and make it available to our translators. Then we regularly pull the translations to our git repository.
 
 ### Consume the translation
 
-* build catalogs
-* usage factory and source
-* DI example
+Now it is time to actually use the translation. This requires a few things to be done:
+
+* Define the `TranslationFactory` and distribute it in your application
+* Define a `TranslationSource` that is used to fill in the translation in the `TranslationFactory`
+* Get concrete translations from the `TranslationFactory` where you need it
+
+Creating and initializing a new `TranslationFactory` is quite easy:
+
+```
+_translationFactory = new TranslationFactory();
+_translationFactory.TranslationSource = new GettextTranslationSource(_translationFolder, "messages", new CultureInfo("de"));
+```
+
+You can also seperate these steps and first create the instance and define the language later. You will receive english translations until a different language is set.
+
+Right now, there is only one implementation for ITranslationSource, which is the GettextTranslationSource. It uses `NGettext` to load `mo` files. With the constructor from the example, it will look for a file `messages.mo`in $"{_translationFolder}\\de\\LC_MESSAGES". This is a convention with gettext, but can be overridden. There are more overloads, i.e. to specify a `mo` file directly.
+
+**Note:** NGettext loads mo files, which are compiled po files. If you do not see any or only outdated translations, this often is because the po files have not been compiled.
+
+As we have defined a language, we can now create translated classes:
+
+```
+Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
+```
+
+#### Inject with SimpleInjector
+
+Of course it depends on your setup how to inject dependencies. Every DI container is slightly different, but you should be able to accomplish this with most containers. In this example, we use [SimpleInjector](https://simpleinjector.org) as very advanced and well-documented DI container.
+
+Most of the time, you will use translations in a places, where the language is defined and won't change, i.e. in a Window in the application or a View in the web app. If the language is set when the constructor is called and will not change during the lifetime of that object, you can simply inject the translation class. In SimpleInjector, you can use this:
+
+```
+var translatables = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(t => typeof(ITranslatable).IsAssignableFrom(t) && !t.IsAbstract).ToList();
+foreach (var t in translatables)
+{
+    var reg = Lifestyle.Transient.CreateRegistration(t, () => translationFactory.CreateTranslation(t), container);
+    container.AddRegistration(t, reg);
+}
+```
+
+You can then request the translation in the constructor of the consuming class:
+
+```
+public class MainWindowViewModel : INotifyPropertyChanged
+{
+    private MainWindowTranslation Translation;
+
+    public MainWindowViewModel(MainWindowTranslation translation)
+    {
+        Translation = translation;
+    }
+}
+```
+
+SimpleInjector will do the resolution for you. However, if the object is built when the language is not yet set, the translation will be english. Also, if you would like to switch the translation while this class is used, you have to request it again in the TranslationFactory.

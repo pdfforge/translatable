@@ -78,6 +78,19 @@ Target "Compile" (fun _ ->
       |> Log "Build-Output: "
 )
 
+open Fake.Testing
+Description "Run unit tests"
+Target "Test" (fun _ ->
+    let unitTestDir = buildDir </> "tests"
+
+    !! (sourceDir </> "UnitTest/**/*.csproj")
+      |> MSBuildRelease unitTestDir "Rebuild"
+      |> Log "Build-Output: "
+
+    !! (unitTestDir + @"\*Test.dll")
+      |> xUnit (fun p -> {p with ToolPath = findToolInSubPath "xunit.console.exe" "packages/build" })
+)
+
 Description "Pack nuget packages"
 Target "Pack" (fun _ ->
     Paket.Pack (fun p -> {p with OutputPath = artifactsDir; Version = packageVersion})
@@ -136,6 +149,7 @@ Target "CompileMoFiles" (fun _ ->
    ==> "SetAssemblyVersion"
    ==> "SetAssemblyInfoYear"
    ==> "Compile"
+   ==> "Test"
    ==> "Pack"
    ==> "Publish"
 

@@ -3,35 +3,29 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Optional;
 using Translatable.Export.Po;
 
 namespace Translatable.Export
 {
     public enum ResultCode
     {
-        Success,
         NoTranslatablesFound,
         NoTranslationsFound,
         Error
     }
 
-    class Exporter
+    public class Exporter
     {
         private IList<Assembly> _assemblies;
 
-        public ResultCode DoExport(ExportOptions exportOptions)
+        public Option<Catalog, ResultCode> DoExport(IEnumerable<string> assemblyFiles)
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             try
             {
-                var potFile = Path.GetFullPath(exportOptions.OutputFile);
-                var outputDirectory = Path.GetDirectoryName(potFile);
-
-                if (!Directory.Exists(outputDirectory))
-                    Directory.CreateDirectory(outputDirectory);
-
-                _assemblies = LoadAssemblies(exportOptions.Assemblies).ToList();
+                _assemblies = LoadAssemblies(assemblyFiles).ToList();
 
                 var allTypes = _assemblies
                     .SelectMany(s => s.GetTypes())
@@ -46,7 +40,7 @@ namespace Translatable.Export
                     .ToList();
 
                 if (!translatables.Any() && !enums.Any())
-                    return ResultCode.NoTranslationsFound;
+                    return Option.None<Catalog, ResultCode>(ResultCode.NoTranslationsFound);
 
                 var catalog = new Catalog();
 
@@ -59,24 +53,19 @@ namespace Translatable.Export
                 }
 
                 if (!catalog.Entries.Any())
-                    return ResultCode.NoTranslationsFound;
+                    return Option.None<Catalog, ResultCode>(ResultCode.NoTranslationsFound);
 
-                var writer = new PotWriter();
-
-                writer.WritePotFile(potFile, catalog);
-
+                return catalog.Some<Catalog, ResultCode>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex);
-                return ResultCode.Error;
+                return Option.None<Catalog, ResultCode>(ResultCode.Error);
             }
             finally
             {
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
             }
-
-            return ResultCode.Success;
         }
 
         private Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
@@ -123,7 +112,7 @@ namespace Translatable.Export
             return assemblies;
         }
 
-        private void ExportClass(Type translatable, Catalog catalog)
+        public void ExportClass(Type translatable, Catalog catalog)
         {
             var properties = translatable.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -176,7 +165,7 @@ namespace Translatable.Export
             }
         }
 
-        private void ExportEnum(Type type, Catalog catalog)
+        public void ExportEnum(Type type, Catalog catalog)
         {
             if (!TypeHelper.HasTranslatableAttribute(type))
                 throw new InvalidOperationException("The type is no translatable enum! Add the Attribute Translatable to the enum declaration.");
@@ -206,28 +195,6 @@ namespace Translatable.Export
                 .Replace("\t", "\\t")
                 .Replace("\r", "\\r")
                 .Replace("\n", "\\n");
-        }
-
-        private string GetTranslatorComment(PropertyInfo pi)
-        {
-            var attributes = pi.GetCustomAttributes(typeof(TranslatorCommentAttribute), false) as TranslatorCommentAttribute[];
-
-            if (attributes != null && attributes.Length > 0)
-                return attributes[0].Value;
-
-            return "";
-        }
-
-        private string GetTranslatorComment(object value)
-        {
-            try
-            {
-                return TranslatorCommentAttribute.GetValue(value);
-            }
-            catch (ArgumentException)
-            {
-            }
-            return "";
         }
     }
 }

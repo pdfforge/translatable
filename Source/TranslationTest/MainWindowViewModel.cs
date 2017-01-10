@@ -75,12 +75,11 @@ namespace Translatable.TranslationTest
         {
             if (_translationFolder == null)
             {
-                _translationFactory = new TranslationFactory(new GettextTranslationSource(new Catalog()));
+                _translationFactory = new TranslationFactory();
                 return;
             }
 
-            var translationSource = new GettextTranslationSource(_translationFolder, MoDomain, cultureInfo);
-            _translationFactory = new TranslationFactory(translationSource);
+            _translationFactory.TranslationSource = new GettextTranslationSource(_translationFolder, MoDomain, cultureInfo);
             _language = cultureInfo;
         }
 

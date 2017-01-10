@@ -3,8 +3,16 @@ source http://nuget.pdfforge.org/api/odata
 
 nuget NGettext >= 0.6
 nuget CommandLineParser >= 2.0 prerelease
+nuget Optional
 
 group build
     source http://nuget.pdfforge.org/api/odata
+
     nuget FAKE
     nuget Gettext.Tools
+    nuget xunit.runner.console
+
+group test
+    source http://nuget.pdfforge.org/api/odata
+
+    nuget xUnit

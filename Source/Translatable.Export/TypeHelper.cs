@@ -4,6 +4,11 @@ using System.Reflection;
 
 namespace Translatable.Export
 {
+    /// <summary>
+    /// Helper class to provide methods to extract and check types and attributes via reflection.
+    /// It uses names for comparisons to allow macthing the same type from several different strong-named assemblies.
+    /// This is required to extract strings from assemblies compiled with a different version of Translatable than this export project.
+    /// </summary>
     static class TypeHelper
     {
         public static bool IsTranslatable(Type t)
@@ -23,11 +28,6 @@ namespace Translatable.Export
         public static bool ImplementsInterface(Type typeToInspect, Type desiredInterface)
         {
             return typeToInspect.GetInterfaces().Any(i => i.FullName == desiredInterface.FullName);
-        }
-
-        public static Attribute GetCustomAttribute(object o, Type attributeType)
-        {
-            return (Attribute) o.GetType().GetCustomAttributes(false).FirstOrDefault(attr => IsType(attr.GetType(), attributeType));
         }
 
         public static string GetTranslationAttributeValue(object o)

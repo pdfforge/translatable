@@ -3,7 +3,7 @@ using CommandLine;
 
 namespace Translatable.Export
 {
-    class ExportOptions
+    public class ExportOptions
     {
         [Value(0, HelpText = "Assembly files that will be scanned for ITranslatable classes.", MetaName = "AssemblyFiles", Required = true)]
         public IEnumerable<string> Assemblies { get; set; }
