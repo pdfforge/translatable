@@ -1,4 +1,5 @@
-# Translatable
+# Translatable [![Build status](https://ci.appveyor.com/api/projects/status/3lwdty64wwl3py2x/branch/master?svg=true)](https://ci.appveyor.com/project/pdfforge/translatable/branch/master)
+
 
 The `Translatable` project aims to bring powerful, typesafe and standard-compliant translations to C#. Inside the application, you work with C# classes to represent your translatable strings. `Translatable` will take care to extract the translatable strings and makes the translations available inside your application at runtime.
 
