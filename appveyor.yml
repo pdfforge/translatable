@@ -4,5 +4,10 @@ build_script:
 - cmd: build.cmd Pack
 
 artifacts:
-- path: build/artifacts
-  name: nuget-packages
+  - path: '/build/artifacts/*.nupkg'
+
+deploy:
+  provider: NuGet
+  api_key:
+    secure: S4iXKpv0yPRrBAfhbktpyKJf8J39zpoBHhvwBXVZ0k2GWeUO7opcxeNjNVdSr1AX
+  skip_symbols: false

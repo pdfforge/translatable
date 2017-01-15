@@ -2,17 +2,15 @@
 
 open Fake
 
-let version = "0.1.9"
-let buildNumber = match buildServer with
-                     | TeamCity -> environVarOrFail "BUILD_NUMBER"
-                     | GitLabCI -> environVarOrFail "CI_PIPELINE_ID"
-                     | _ -> "0"
+let version = match buildServer with
+                     | AppVeyor -> environVarOrFail "APPVEYOR_BUILD_VERSION"
+                     | _ -> "0.1.0"
 
 let buildSuffix = match buildServer with
                      | LocalBuild -> "-beta"
                      | _ -> ""
 
-let fullVersion = sprintf "%s.%s" version buildNumber
+let fullVersion = version
 let packageVersion = sprintf "%s%s" fullVersion buildSuffix
 
 let buildDir = "build"
