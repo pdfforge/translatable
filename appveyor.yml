@@ -1,0 +1,8 @@
+version: 0.1.{build}
+
+build_script:
+- cmd: build.cmd Pack
+
+artifacts:
+- path: build/artifacts
+  name: nuget-packages
