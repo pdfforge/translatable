@@ -1,18 +1,18 @@
 framework: net40, net40-full
-source http://nuget.pdfforge.org/api/odata
+source https://www.nuget.org/api/v2
 
 nuget NGettext >= 0.6
 nuget CommandLineParser >= 2.0 prerelease
 nuget Optional
 
 group build
-    source http://nuget.pdfforge.org/api/odata
+    source https://www.nuget.org/api/v2
 
     nuget FAKE
     nuget Gettext.Tools
     nuget xunit.runner.console
 
 group test
-    source http://nuget.pdfforge.org/api/odata
+    source https://www.nuget.org/api/v2
 
     nuget xUnit
