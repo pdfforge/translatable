@@ -1,4 +1,4 @@
-﻿type project
+type project
 authors pdfforge GmbH
 include-pdbs true
 licenseUrl http://opensource.org/licenses/MIT

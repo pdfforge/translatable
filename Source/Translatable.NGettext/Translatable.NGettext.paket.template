@@ -1,10 +1,10 @@
-﻿type project
+type project
 authors pdfforge GmbH
 include-pdbs true
 licenseUrl http://opensource.org/licenses/MIT
 
 dependencies
-	Translatable ~> 0.1
+	Translatable = 0.1.0-beta
 	NGettext = LOCKEDVERSION
 
 references

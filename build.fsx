@@ -13,6 +13,9 @@ let buildSuffix = match buildServer with
 let fullVersion = version
 let packageVersion = sprintf "%s%s" fullVersion buildSuffix
 
+tracefn "Building version %s" fullVersion
+tracefn "NuGet package version %s" packageVersion
+
 let buildDir = "build"
 let artifactsDir = buildDir </> "artifacts"
 let sourceDir = "Source"
@@ -20,6 +23,7 @@ let languageDir = sourceDir </> "TranslationTest/Languages"
 
 open System
 open System.IO
+open System.Text.RegularExpressions
 
 let execProcessOrFail cmd arguments =
     let result = ExecProcess (fun info ->
@@ -91,10 +95,18 @@ Target "Test" (fun _ ->
 
 Description "Pack nuget packages"
 Target "Pack" (fun _ ->
+    let updatePackageVersion file =
+        let replaceDependency line = Regex.Replace(line, "^\s*(Translatable.*?)\s+=\s+[.0-9]*(-[a-z]*){0,1}\s*$", (sprintf "\tTranslatable = %s" packageVersion))
+
+        tracefn "Patching %s" file
+        let lines = File.ReadAllLines(file)
+        let transformed = seq { for line in lines -> replaceDependency line }
+        File.WriteAllLines(file, transformed) 
+
     let encoding = System.Text.Encoding.UTF8
 
     !! (sourceDir </> "**/*.paket.template")
-    |> RegexReplaceInFilesWithEncoding "^\w*Translatable.*$" (sprintf "\tTranslatable = %s" packageVersion) encoding
+    |> Seq.iter (fun file -> updatePackageVersion file)
     
     Paket.Pack (fun p -> {p with OutputPath = artifactsDir; Version = packageVersion})
 )
