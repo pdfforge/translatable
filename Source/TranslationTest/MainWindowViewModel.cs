@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using NGettext;
 using Translatable.NGettext;
 
 namespace Translatable.TranslationTest
@@ -16,7 +16,7 @@ namespace Translatable.TranslationTest
         private CultureInfo _language;
 
         private int _messages;
-        private TranslationFactory _translationFactory;
+        private readonly TranslationFactory _translationFactory;
         private TestEnum _selectedTestEnum;
 
         public MainWindowViewModel()
@@ -25,6 +25,9 @@ namespace Translatable.TranslationTest
 
             if (_translationFolder != null)
                 LoadLanguages(_translationFolder);
+
+            _translationFactory = new TranslationFactory();
+            _translationFactory.TranslationChanged += OnTranslationChanged;
 
             Language = new CultureInfo("en-US");
 
@@ -58,12 +61,6 @@ namespace Translatable.TranslationTest
             {
                 _language = value;
                 SetLanguage(value);
-                Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
-                var selected = SelectedTestEnum;
-                RaisePropertyChanged(nameof(Translation));
-                RaisePropertyChanged(nameof(MessageText));
-
-                SelectedTestEnum = selected;
             }
         }
 
@@ -75,12 +72,21 @@ namespace Translatable.TranslationTest
         {
             if (_translationFolder == null)
             {
-                _translationFactory = new TranslationFactory();
                 return;
             }
 
             _translationFactory.TranslationSource = new GettextTranslationSource(_translationFolder, MoDomain, cultureInfo);
             _language = cultureInfo;
+        }
+
+        private void OnTranslationChanged(object sender, EventArgs eventArgs)
+        {
+            Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
+            var selected = SelectedTestEnum;
+            RaisePropertyChanged(nameof(Translation));
+            RaisePropertyChanged(nameof(MessageText));
+
+            SelectedTestEnum = selected;
         }
 
         private string GetTranslationFolder()
@@ -102,6 +108,8 @@ namespace Translatable.TranslationTest
         {
             if (!Directory.Exists(translationFolder))
                 return;
+
+            Languages.Add(new CultureInfo("en-US"));
 
             foreach (var directory in Directory.EnumerateDirectories(translationFolder))
             {
