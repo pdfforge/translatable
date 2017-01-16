@@ -2,6 +2,8 @@ type project
 authors pdfforge GmbH
 include-pdbs true
 licenseUrl http://opensource.org/licenses/MIT
+projectUrl https://github.com/pdfforge/translatable
+iconUrl https://github.com/pdfforge/translatable/blob/master/doc/translatable.png?raw=true
 
 files
 	bin/Release/CommandLine.dll => tools
@@ -9,8 +11,6 @@ files
 	bin/Release/Translatable.Export.exe => tools
 
 description
-	The Translatable project has the goal to make creating type-safe 
-	translation objects easy.
+	The Translatable project (https://www.nuget.org/packages/Translatable/) has the goal to make creating type-safe translation objects easy.
 
-	The Export package allows to analyze assemblies for instances
-	of ITranslatable and export the POT files based on that.
+	The Export package allows to analyze assemblies for instances of ITranslatable and export the POT files based on that.
