@@ -91,6 +91,11 @@ Target "Test" (fun _ ->
 
 Description "Pack nuget packages"
 Target "Pack" (fun _ ->
+    let encoding = System.Text.Encoding.UTF8
+
+    !! (sourceDir </> "**/*.paket.template")
+    |> RegexReplaceInFilesWithEncoding "^\w*Translatable.*$" (sprintf "\tTranslatable = %s" packageVersion) encoding
+    
     Paket.Pack (fun p -> {p with OutputPath = artifactsDir; Version = packageVersion})
 )
 

@@ -1,6 +1,7 @@
 ﻿type project
 authors pdfforge GmbH
 include-pdbs true
+licenseUrl http://opensource.org/licenses/MIT
 
 references
 	Translatable.dll
@@ -9,5 +10,4 @@ files
 	bin/Release/Translatable.dll => lib/net40
 
 description
-	The Translatable project has the goal to make creating type-safe 
-	translation objects easy.
+	The Translatable project has the goal to make creating type-safe translation objects easy.

@@ -29,6 +29,12 @@ namespace Translatable
         /// <typeparam name="T">The type that will be analyzed and translated</typeparam>
         /// <returns>A list of translations of the enum T</returns>
         EnumTranslation<T>[] CreateEnumTranslation<T>() where T : struct, IConvertible;
+
+        /// <summary>
+        /// The event is raised when the translation has changed. Long-living classes should update their translations
+        /// when the event is received.
+        /// </summary>
+        event EventHandler TranslationChanged;
     }
 
     /// <summary>
@@ -37,6 +43,8 @@ namespace Translatable
     /// </summary>
     public class TranslationFactory : ITranslationFactory
     {
+        private ITranslationSource _translationSource;
+
         /// <summary>
         ///     Create a new TranslationFactory with the given ITranslationSource
         /// </summary>
@@ -46,7 +54,11 @@ namespace Translatable
             TranslationSource = translationSource;
         }
 
-        public ITranslationSource TranslationSource { get; set; }
+        public ITranslationSource TranslationSource
+        {
+            get { return _translationSource; }
+            set { _translationSource = value; TranslationChanged?.Invoke(this, EventArgs.Empty); }
+        }
 
         /// <summary>
         ///     Creates a translated instance of the type T using reflection and the given ITranslationSource
@@ -162,5 +174,7 @@ namespace Translatable
 
             property.SetValue(o, translations, null);
         }
+
+        public event EventHandler TranslationChanged;
     }
 }
