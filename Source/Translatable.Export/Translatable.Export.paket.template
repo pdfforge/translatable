@@ -7,6 +7,7 @@ iconUrl https://github.com/pdfforge/translatable/blob/master/doc/translatable.pn
 
 files
 	bin/Release/CommandLine.dll => tools
+	bin/Release/Optional.dll => tools
 	bin/Release/Translatable*.dll => tools
 	bin/Release/Translatable.Export.exe => tools
 

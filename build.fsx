@@ -103,8 +103,6 @@ Target "Pack" (fun _ ->
         let transformed = seq { for line in lines -> replaceDependency line }
         File.WriteAllLines(file, transformed) 
 
-    let encoding = System.Text.Encoding.UTF8
-
     !! (sourceDir </> "**/*.paket.template")
     |> Seq.iter (fun file -> updatePackageVersion file)
     
