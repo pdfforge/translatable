@@ -115,5 +115,53 @@ namespace Translatable.Export
         {
             return desiredType.FullName == typeToInspect.FullName;
         }
+
+        public static string GetContextAttributeValue(PropertyInfo propertyInfo)
+        {
+            var attribute =
+                propertyInfo.GetCustomAttributes(false)
+                    .FirstOrDefault(attr => IsType(attr.GetType(), typeof(ContextAttribute)));
+
+            if (attribute == null)
+                return "";
+
+            try
+            {
+                var propInfo = attribute.GetType().GetProperty("Value", BindingFlags.Public | BindingFlags.Instance);
+                var value = propInfo.GetValue(attribute, new object[0]);
+                return (string)value;
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        public static string GetEnumContextAttributeValue(object o)
+        {
+            var type = o.GetType();
+            var memInfo = type.GetMember(o.ToString());
+
+            if (memInfo.Length == 0)
+                return "";
+
+            var attribute =
+                memInfo[0].GetCustomAttributes(false)
+                    .FirstOrDefault(attr => IsType(attr.GetType(), typeof(ContextAttribute)));
+
+            if (attribute == null)
+                return "";
+
+            try
+            {
+                var propInfo = attribute.GetType().GetProperty("Value", BindingFlags.Public | BindingFlags.Instance);
+                var value = propInfo.GetValue(attribute, new object[0]);
+                return (string)value;
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
     }
 }

@@ -9,6 +9,10 @@ namespace Translatable.Export.UnitTest
 
         public string SampleText { get; private set; } = "This is my content\r\nwith multiple lines";
 
+
+        [Context("Menu")]
+        public string Messages2 { get; private set; } = "Messages";
+
         public string Messages { get; private set; } = "Messages";
 
         public string[] NewMessagesText { get; set; } = { "You have {0} new message", "You have {0} new messages" };

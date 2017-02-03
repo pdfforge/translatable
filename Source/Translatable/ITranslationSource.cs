@@ -7,7 +7,7 @@
     public interface ITranslationSource
     {
         IPluralBuilder GetPluralBuilder();
-        string GetTranslation(string translationKey);
-        string[] GetAllTranslations(string translationKey, IPluralBuilder pluralBuilder);
+        string GetTranslation(string translationKey, string context = "");
+        string[] GetAllTranslations(string translationKey, string context, IPluralBuilder pluralBuilder);
     }
 }

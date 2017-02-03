@@ -22,8 +22,9 @@ namespace Translatable
             {
                 try
                 {
+                    var context = ContextAttribute.GetValue(value);
                     var msgid = TranslationAttribute.GetValue(value);
-                    var translation = GetTranslation(msgid, translationSource);
+                    var translation = GetTranslation(msgid, context, translationSource);
                     values.Add(new EnumTranslation<T>(translation, value));
                 }
                 catch (ArgumentException)
@@ -35,11 +36,11 @@ namespace Translatable
             return values.ToArray();
         }
 
-        private static string GetTranslation(string msgId, ITranslationSource translationSource = null)
+        private static string GetTranslation(string msgId, string context, ITranslationSource translationSource = null)
         {
             if (translationSource == null)
                 return msgId;
-            return translationSource.GetTranslation(msgId);
+            return translationSource.GetTranslation(msgId, context);
         }
     }
 }

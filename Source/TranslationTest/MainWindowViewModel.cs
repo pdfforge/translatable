@@ -34,7 +34,7 @@ namespace Translatable.TranslationTest
             SelectedTestEnum = TestEnum.FirstValue;
         }
 
-        public MainWindowTranslation Translation { get; private set; }
+        public MainWindowTranslation Translation { get; private set; } = new MainWindowTranslation();
 
         public TestEnum SelectedTestEnum
         {

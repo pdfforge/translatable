@@ -5,14 +5,16 @@ namespace Translatable.Export.Po
     public class PoEntry
     {
         public readonly IList<string> SourceReferences = new List<string>();
+        public string Context { get; set; }
         public string Comment { get; set; }
     }
 
     public class SingularEntry : PoEntry
     {
-        public SingularEntry(string msgId, string comment = "")
+        public SingularEntry(string msgId, string context = "", string comment = "")
         {
             MsgId = msgId;
+            Context = context ?? "";
             Comment = comment ?? "";
         }
 
@@ -21,10 +23,11 @@ namespace Translatable.Export.Po
 
     public class PluralEntry : PoEntry
     {
-        public PluralEntry(string msgIdSingular, string msgIdPlural, string comment = "")
+        public PluralEntry(string msgIdSingular, string msgIdPlural, string context = "", string comment = "")
         {
             MsgIdSingular = msgIdSingular;
             MsgIdPlural = msgIdPlural;
+            Context = context ?? "";
             Comment = comment ?? "";
         }
 

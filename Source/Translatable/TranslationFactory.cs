@@ -132,8 +132,9 @@ namespace Translatable
         private void SetStringProperty(ITranslatable o, PropertyInfo property, ITranslationSource translationSource)
         {
             var value = (string) property.GetValue(o, null);
+            var context = ContextAttribute.GetValue(property);
 
-            var translated = translationSource.GetTranslation(value);
+            var translated = translationSource.GetTranslation(value, context);
 
             if (!string.IsNullOrEmpty(translated))
                 property.SetValue(o, translated, null);
@@ -142,13 +143,14 @@ namespace Translatable
         private void SetStringArrayProperty(ITranslatable o, PropertyInfo property, IPluralBuilder pluralBuilder,
             ITranslationSource translationSource)
         {
+            var context = ContextAttribute.GetValue(property);
             var value = (string[]) property.GetValue(o, null);
 
             if (value.Length != 2)
                 throw new InvalidDataException(
                     $"The plural string for key {property.Name} must contain two strings: a singular and a plural form. It contained {value.Length} strings.");
 
-            var translations = translationSource.GetAllTranslations(value[0], pluralBuilder);
+            var translations = translationSource.GetAllTranslations(value[0], context, pluralBuilder);
 
             if (translations.Length == pluralBuilder.NumberOfPlurals)
                 property.SetValue(o, translations, null);

@@ -10,6 +10,9 @@
 
         public string Messages { get; private set; } = "Messages";
 
+        [Context("Some context")]
+        public string Messages2 { get; private set; } = "Messages";
+
         private string[] NewMessagesText { get; set; } = {"You have {0} new message", "You have {0} new messages"};
         
         [TranslatorComment("This page is intentionally left blank")]

@@ -11,10 +11,14 @@
     </Window.DataContext>
     <StackPanel>
         <TextBlock Text="{Binding Translation.SampleText}" />
-        <TextBlock Text="{Binding Translation.Messages}" />
-        <TextBox Text="{Binding Messages, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="{Binding Translation.Messages}" Margin="0 0 0 10" />
+        <TextBox Text="{Binding Messages, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 0 10" />
         <TextBlock Text="{Binding MessageText}" />
-        <TextBlock Text="{Binding Translation.MissingTranslation}" />
+        <TextBlock Text="{Binding Translation.MissingTranslation}" Margin="0 0 0 10" />
+        <TextBlock Text="Translation for 'Messages' without context" />
+        <TextBlock Text="{Binding Translation.Messages}" Margin="0 0 0 10" />
+        <TextBlock Text="Translation for same msgid 'Messages' with context 'Some Context'" />
+        <TextBlock Text="{Binding Translation.Messages2}" />
         <Label Content="Translated enum test" />
         <ComboBox ItemsSource="{Binding Translation.TestEnumTranslation}" DisplayMemberPath="Translation" SelectedValuePath="Value"  SelectedValue="{Binding SelectedTestEnum}" />
         <Label Content="Language" />

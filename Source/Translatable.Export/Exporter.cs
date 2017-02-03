@@ -130,12 +130,13 @@ namespace Translatable.Export
                     throw new InvalidOperationException($"The property {property.Name} in type {translatable.FullName} is not writable!");
 
                 var comment = TypeHelper.GetTranslatorCommentAttributeValue(property);
+                var context = EscapeString(TypeHelper.GetContextAttributeValue(property));
 
                 if (property.PropertyType == typeof(string))
                 {
                     var escapedMessage = EscapeString(property.GetValue(obj, null).ToString());
 
-                    catalog.AddEntry(escapedMessage, comment, translatable.FullName);
+                    catalog.AddEntry(escapedMessage, comment, translatable.FullName, context);
 
                     continue;
                 }
@@ -177,8 +178,9 @@ namespace Translatable.Export
                     var msgid = TypeHelper.GetTranslationAttributeValue(value);
                     var escapedMessage = EscapeString(msgid);
                     var comment = TypeHelper.GetEnumTranslatorCommentAttributeValue(value);
+                    var context = EscapeString(TypeHelper.GetEnumContextAttributeValue(value));
 
-                    catalog.AddEntry(escapedMessage, comment, type.FullName);
+                    catalog.AddEntry(escapedMessage, comment, type.FullName, context);
                 }
                 catch (ArgumentException)
                 {

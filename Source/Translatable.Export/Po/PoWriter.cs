@@ -34,6 +34,9 @@ namespace Translatable.Export.Po
                             output.WriteLine($"#: {referencesString}");
                         }
 
+                        if (!string.IsNullOrWhiteSpace(poEntry.Context))
+                            output.WriteLine($"msgctxt \"{poEntry.Context}\"");
+
                         if (poEntry is SingularEntry)
                         {
                             var singularEntry = poEntry as SingularEntry;

@@ -7,6 +7,7 @@ namespace Translatable
     /// Allows to add comments for the translators that will be included in the
     /// translation files
     /// </summary>
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class TranslatorCommentAttribute : Attribute
     {
         public TranslatorCommentAttribute(string value)

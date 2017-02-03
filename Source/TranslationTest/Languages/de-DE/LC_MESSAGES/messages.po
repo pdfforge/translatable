@@ -29,6 +29,11 @@ msgid "Messages"
 msgstr "Nachrichten"
 
 #: Translatable.TranslationTest.MainWindowTranslation
+msgctxt "Some context"
+msgid "Messages"
+msgstr "Botschaften"
+
+#. Translatable.TranslationTest.MainWindowTranslation
 msgid "You have {0} new message"
 msgid_plural "You have {0} new messages"
 msgstr[0] "Sie haben {0} neue Nachricht"
@@ -39,6 +44,7 @@ msgstr[1] "Sie haben {0} neue Nachrichten"
 msgid "This translation might be \"missing\""
 msgstr ""
 
+#. Test
 #: Translatable.TranslationTest.TestEnum
 msgid "This is the first value"
 msgstr "Dies ist der erste Wert"

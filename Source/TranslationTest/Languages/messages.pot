@@ -15,6 +15,11 @@ msgid "Messages"
 msgstr ""
 
 #: Translatable.TranslationTest.MainWindowTranslation
+msgctxt "Some context"
+msgid "Messages"
+msgstr ""
+
+#. Translatable.TranslationTest.MainWindowTranslation
 msgid "You have {0} new message"
 msgid_plural "You have {0} new messages"
 msgstr[0] ""

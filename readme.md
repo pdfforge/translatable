@@ -63,6 +63,20 @@ public enum MyEnum
 }
 ```
 
+#### Special attributes
+
+To improve the quality of the translations or use certain features, you can annotate the properties with a few attributes:
+
+* TranslatorComment
+* Context
+* Translation
+
+`TranslatorComment` can be used on properties and enum fields and allows yo to specify a comment for the translator. You could explain the restrictions of the message (i.e. small space) or how to interpret the message.
+
+`Context` allows the disambiguation of identical msgids on properties and enum fields. This can be helpful if there are (usually short) messages that can be translated in different ways. A very common case are buttons like "Previous" and "Next". In some language, their translation depends on the context. In German, when navigate to the next message, you would translate it with "Nächste" (the word depends on the gender). If it is a button in a wizard, the next page would usually be translated with "Weiter".
+
+`Translation` can only be used on enum fields and declares the translation of a value, as there is not other way to store it. You need to have the `Translatable` attribute on the enum itself.
+
 ### Export
 
 Exporting content is pretty easy. You run the export application and specify the pot file to create (with the argument `--outputfile` and a list of assemblies to scan).

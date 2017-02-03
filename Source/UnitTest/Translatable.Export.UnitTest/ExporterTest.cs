@@ -14,7 +14,7 @@ namespace Translatable.Export.UnitTest
         {
             var catalog = DoExport(typeof(TestTranslation));
             
-            Assert.Equal(5, catalog.Entries.Count);
+            Assert.Equal(6, catalog.Entries.Count);
         }
 
         [Fact]
@@ -61,10 +61,28 @@ namespace Translatable.Export.UnitTest
             var catalog = ExportCurrentAssembly();
             var translation = new TestTranslation();
 
-            Assert.Equal(8, catalog.Entries.Count);
+            Assert.Equal(9, catalog.Entries.Count);
 
             Assert.True(HasTranslation(catalog, translation.Title));
             Assert.True(HasTranslation(catalog, TranslationAttribute.GetValue(TestEnum.FirstValue)));
+        }
+
+        [Fact]
+        public void ExportThisAssembly_HasMessageWithContext()
+        {
+            var catalog = ExportCurrentAssembly();
+            var translation = new TestTranslation();
+
+            Assert.True(HasTranslation(catalog, translation.Messages2, "Menu"));
+        }
+
+        [Fact]
+        public void ExportThisAssembly_HasMessageWithoutContext()
+        {
+            var catalog = ExportCurrentAssembly();
+            var translation = new TestTranslation();
+
+            Assert.True(HasTranslation(catalog, translation.Messages, ""));
         }
 
         private string GetCurrentAssemblyFile()
@@ -74,9 +92,9 @@ namespace Translatable.Export.UnitTest
             return Uri.UnescapeDataString(uri.Path);
         }
 
-        private bool HasTranslation(Catalog catalog, string msgId)
+        private bool HasTranslation(Catalog catalog, string msgId, string context = "")
         {
-            return GetSingulars(catalog).Any(entry => entry.MsgId == msgId);
+            return GetSingulars(catalog).Any(entry => entry.MsgId == msgId && entry.Context == context);
         }
 
         private Catalog DoExport(Type t)

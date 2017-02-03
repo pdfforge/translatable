@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.IO;
+using System.Linq;
 using NGettext;
 using Translation;
 
@@ -32,15 +33,21 @@ namespace Translatable.NGettext
             return new GettextPluralBuilder(_catalog.PluralRule);
         }
 
-        public string GetTranslation(string translationKey)
+        public string GetTranslation(string translationKey, string context = "")
         {
-            return _catalog.GetString(translationKey);
+            if (string.IsNullOrWhiteSpace(context))
+                return _catalog.GetString(translationKey);
+
+            return _catalog.GetParticularString(context, translationKey);
         }
 
-        public string[] GetAllTranslations(string translationKey, IPluralBuilder pluralBuilder)
+        public string[] GetAllTranslations(string translationKey, string context, IPluralBuilder pluralBuilder)
         {
             if (!_catalog.Translations.ContainsKey(translationKey))
                 return new string[] {};
+
+            if (!string.IsNullOrWhiteSpace(context))
+                translationKey = context + Catalog.CONTEXT_GLUE + translationKey;
 
             var translations = _catalog.GetTranslations(translationKey);
 
