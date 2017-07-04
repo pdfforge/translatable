@@ -6,13 +6,15 @@ nuget CommandLineParser >= 2.0 prerelease
 nuget Optional
 
 group build
-    source https://www.nuget.org/api/v2
+	source https://www.nuget.org/api/v2
 
     nuget FAKE
     nuget Gettext.Tools
     nuget xunit.runner.console
 
 group test
-    source https://www.nuget.org/api/v2
+	framework: net40, net40-full
+	source https://www.nuget.org/api/v2
 
-    nuget xUnit
+    nuget xUnit ~> 1
+	nuget NSubstitute

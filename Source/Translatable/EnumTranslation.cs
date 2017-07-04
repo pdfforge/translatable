@@ -25,7 +25,6 @@ namespace Translatable
             }
             internal set
             {
-                if (value == _translation) return;
                 _translation = value;
                 OnPropertyChanged(nameof(Translation));
             }

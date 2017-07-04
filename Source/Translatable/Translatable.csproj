@@ -46,11 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CachedTranslationFactory.cs" />
     <Compile Include="DefaultPluralBuilder.cs" />
     <Compile Include="EnumTranslation.cs" />
     <Compile Include="EnumTranslationFactory.cs" />
     <Compile Include="IPluralBuilder.cs" />
     <Compile Include="ITranslatable.cs" />
+    <Compile Include="ITranslationFactory.cs" />
     <Compile Include="ITranslationSource.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

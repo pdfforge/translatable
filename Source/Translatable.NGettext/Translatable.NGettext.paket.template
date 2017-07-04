@@ -6,7 +6,7 @@ projectUrl https://github.com/pdfforge/translatable
 iconUrl https://github.com/pdfforge/translatable/blob/master/doc/translatable.png?raw=true
 
 dependencies
-	Translatable = 0.1.0-beta
+	Translatable = 0.2.0-beta
 	NGettext = LOCKEDVERSION
 
 references

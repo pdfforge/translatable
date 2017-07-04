@@ -3,3 +3,4 @@ NGettext
 
 group test
     xUnit
+	NSubstitute
