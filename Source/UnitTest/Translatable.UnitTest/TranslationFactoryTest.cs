@@ -1,4 +1,6 @@
-﻿using NGettext;
+﻿using System;
+using System.Linq;
+using NGettext;
 using Translatable.NGettext;
 using Xunit;
 
@@ -49,6 +51,54 @@ namespace Translatable.UnitTest
             var translation = _translationFactory.CreateTranslation<TestTranslation>();
 
             Assert.NotEqual(translation.Messages, translation.Messages2);
+        }
+
+        [Fact]
+        public void UpdateOrCreate_WithNullProperty_CreatesNewTranslation()
+        {
+            var translation = _translationFactory.UpdateOrCreateTranslation<TestTranslation>(null);
+
+            Assert.NotNull(translation);
+        }
+
+        [Fact]
+        public void UpdateOrCreate_WithTranslatedSingularString_UpdatesTranslation()
+        {
+            var translation = new TestTranslation();
+            translation.NextMail = "SOME_TRANSLATED_TEXT";
+
+            translation = _translationFactory.UpdateOrCreateTranslation(translation);
+
+            Assert.Equal(_defaultTranslation.NextMail, translation.NextMail);
+        }
+
+        [Fact]
+        public void UpdateOrCreate_WithTranslatedPluralString_UpdatesTranslation()
+        {
+            var translation = new TestTranslation();
+            translation.Messages[0] = "SOME_TRANSLATED_TEXT";
+
+            translation = _translationFactory.UpdateOrCreateTranslation(translation);
+
+            Assert.Equal(_defaultTranslation.Messages[0], translation.Messages[0]);
+        }
+
+        [Fact]
+        public void UpdateOrCreate_WithTranslatedEnumArray_UpdatesTranslation()
+        {
+            var expectedTranslation = "SOME_TRANSLATED_TEXT";
+            var translation = new TestTranslation();
+            var translatedArray = translation.TestValues;
+            var firstTranslatedItem = translation.TestValues[0];
+
+            _catalog.Translations.Add(_defaultTranslation.TestValues[0].Translation, new[] { expectedTranslation });
+
+            var updatedTranslation = _translationFactory.UpdateOrCreateTranslation(translation);
+
+            Assert.Same(translation, updatedTranslation);
+            Assert.Same(translatedArray, updatedTranslation.TestValues);
+            Assert.Same(firstTranslatedItem, updatedTranslation.TestValues[0]);
+            Assert.Equal(expectedTranslation, updatedTranslation.TestValues[0].Translation);
         }
     }
 }

@@ -52,6 +52,7 @@
     <Compile Include="IPluralBuilder.cs" />
     <Compile Include="ITranslatable.cs" />
     <Compile Include="ITranslationSource.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranslatableAttribute.cs" />
     <Compile Include="TranslationAttribute.cs" />

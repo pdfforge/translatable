@@ -81,12 +81,9 @@ namespace Translatable.TranslationTest
 
         private void OnTranslationChanged(object sender, EventArgs eventArgs)
         {
-            Translation = _translationFactory.CreateTranslation<MainWindowTranslation>();
-            var selected = SelectedTestEnum;
+            Translation = _translationFactory.UpdateOrCreateTranslation(Translation);
             RaisePropertyChanged(nameof(Translation));
             RaisePropertyChanged(nameof(MessageText));
-
-            SelectedTestEnum = selected;
         }
 
         private string GetTranslationFolder()

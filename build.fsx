@@ -2,9 +2,11 @@
 
 open Fake
 
+let baseVersion = "0.2"
+
 let version = match buildServer with
-                     | AppVeyor -> environVarOrFail "APPVEYOR_BUILD_VERSION"
-                     | _ -> "0.1.0"
+                     | AppVeyor -> baseVersion + "." + environVarOrFail "APPVEYOR_BUILD_NUMBER"
+                     | _ -> baseVersion + ".0"
 
 let buildSuffix = match buildServer with
                      | LocalBuild -> "-beta"
@@ -36,7 +38,7 @@ let execProcessOrFail cmd arguments =
 Description "Clean up"
 Target "Clean" (fun _ ->
     let dirsToClean = [buildDir]
-    
+
     let rec CleanOrRetry retries dirs =
         try CleanDirs dirs
         with | _ -> match retries with
@@ -52,7 +54,7 @@ Description "Update the assembly version number"
 Target "SetAssemblyVersion" (fun _ ->
     !! (sourceDir </> "**/AssemblyInfo.cs")
     |> Seq.iter (fun f ->
-      trace f 
+      trace f
       ReplaceAssemblyInfoVersions (fun p ->
       { p with
           OutputFileName = f
@@ -65,7 +67,7 @@ Description "Update the assembly copyright year"
 Target "SetAssemblyInfoYear" (fun _ ->
     !! (sourceDir </> "**/AssemblyInfo.cs")
     |> Seq.iter (fun f ->
-      trace f 
+      trace f
       ReplaceAssemblyInfoVersions (fun p ->
       { p with
           OutputFileName = f
@@ -101,11 +103,11 @@ Target "Pack" (fun _ ->
         tracefn "Patching %s" file
         let lines = File.ReadAllLines(file)
         let transformed = seq { for line in lines -> replaceDependency line }
-        File.WriteAllLines(file, transformed) 
+        File.WriteAllLines(file, transformed)
 
     !! (sourceDir </> "**/*.paket.template")
     |> Seq.iter (fun file -> updatePackageVersion file)
-    
+
     Paket.Pack (fun p -> {p with OutputPath = artifactsDir; Version = packageVersion})
 )
 
@@ -118,11 +120,11 @@ Description "Export test translations"
 Target "ExportPot" (fun _ ->
     let exportTool = findToolInSubPath "Translatable.Export.exe" (sourceDir </> "Translatable.Export/bin/Release/")
     let outputPath = languageDir </> "messages.pot"
-    
+
     let assemblies = !! (sourceDir </> "TranslationTest/bin/Release/TranslationTest.exe")
                      |> Seq.toList
                      |> List.fold (fun str assembly -> sprintf "%s \"%s\"" str assembly) ""
-    
+
     let argumentString = sprintf "--outputfile \"%s\" %s" outputPath assemblies
 
     execProcessOrFail exportTool argumentString
@@ -131,7 +133,7 @@ Target "ExportPot" (fun _ ->
 Description "Update po files with pots"
 Target "UpdatePoFiles" (fun _ ->
     let msgmerge = findToolInSubPath "msgmerge.exe" "packages/build"
-    
+
     !! (languageDir </> "*.pot")
     |> Seq.iter (fun potFile ->
         let poFilename = Path.ChangeExtension(Path.GetFileName(potFile), "po")

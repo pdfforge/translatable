@@ -36,6 +36,34 @@ namespace Translatable
             return values.ToArray();
         }
 
+        internal static EnumTranslation<T>[] UpdateEnumTranslation<T>(ITranslationSource translationSource, EnumTranslation<T>[] translations) where T : struct, IConvertible
+        {
+            var type = typeof(T);
+
+            if (!type.IsEnum)
+                throw new InvalidOperationException($"The type {type.Name} has to be an enum.");
+
+            if (!type.IsDefined(typeof(TranslatableAttribute), false))
+                throw new InvalidOperationException($"The type {type.Name} is no translatable enum! Add the Attribute Translatable to the enum declaration.");
+
+            foreach (var value in translations)
+            {
+                try
+                {
+                    var context = ContextAttribute.GetValue(value.Value);
+                    var msgid = TranslationAttribute.GetValue(value.Value);
+                    var translation = GetTranslation(msgid, context, translationSource);
+                    value.Translation = translation;
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidOperationException($"The value {value} in enum {type.Name} does not have the [Translation] attribute. This is required to make it translatable.");
+                }
+            }
+
+            return translations;
+        }
+
         private static string GetTranslation(string msgId, string context, ITranslationSource translationSource = null)
         {
             if (translationSource == null)
