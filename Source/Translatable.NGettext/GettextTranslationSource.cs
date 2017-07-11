@@ -1,7 +1,6 @@
-﻿using System.Globalization;
+﻿using NGettext;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using NGettext;
 using Translation;
 
 namespace Translatable.NGettext
@@ -43,16 +42,16 @@ namespace Translatable.NGettext
 
         public string[] GetAllTranslations(string translationKey, string context, IPluralBuilder pluralBuilder)
         {
-            if (!_catalog.Translations.ContainsKey(translationKey))
-                return new string[] {};
-
             if (!string.IsNullOrWhiteSpace(context))
                 translationKey = context + Catalog.CONTEXT_GLUE + translationKey;
+
+            if (!_catalog.Translations.ContainsKey(translationKey))
+                return new string[] { };
 
             var translations = _catalog.GetTranslations(translationKey);
 
             if (translations.Length != pluralBuilder.NumberOfPlurals)
-                return new string[] {};
+                return new string[] { };
 
             return translations;
         }
