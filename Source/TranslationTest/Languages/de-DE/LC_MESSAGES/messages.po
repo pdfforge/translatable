@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: \n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: \n"
 "Last-Translator: pdfforge\n"
 "Language-Team: \n"
@@ -13,10 +13,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.TestTranslation
 msgid "Main window title"
 msgstr "Hauptfenster-Titel"
 
 #: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.TestTranslation
 msgid ""
 "This is my content\r\n"
 "with multiple lines"
@@ -25,10 +27,12 @@ msgstr ""
 "mit mehreren Zeilen"
 
 #: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.TestTranslation
 msgid "Messages"
 msgstr "Nachrichten"
 
 #: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.TestTranslation
 msgctxt "Some context"
 msgid "Messages"
 msgstr "Botschaften"
@@ -41,7 +45,12 @@ msgstr[1] "Sie haben {0} neue Nachrichten"
 
 #. This page is intentionally left blank
 #: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.TestTranslation
 msgid "This translation might be \"missing\""
+msgstr ""
+
+#: Translatable.TranslationTest.TestTranslation
+msgid "Test"
 msgstr ""
 
 #. Test

@@ -1,20 +1,24 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: en\n"
 
-#: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
 msgid "Main window title"
 msgstr ""
 
-#: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
 msgid "This is my content\r\nwith multiple lines"
 msgstr ""
 
-#: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
 msgid "Messages"
 msgstr ""
 
-#: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
 msgctxt "Some context"
 msgid "Messages"
 msgstr ""
@@ -26,8 +30,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. This page is intentionally left blank
-#: Translatable.TranslationTest.MainWindowTranslation
+#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
 msgid "This translation might be \"missing\""
+msgstr ""
+
+#: Translatable.TranslationTest.TestTranslation
+msgid "Test"
 msgstr ""
 
 #. Test
