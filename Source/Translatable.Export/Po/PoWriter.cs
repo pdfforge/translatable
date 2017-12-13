@@ -20,7 +20,11 @@ namespace Translatable.Export.Po
                 {
                     output.WriteLine("msgid \"\"");
                     output.WriteLine("msgstr \"\"");
-                    output.WriteLine("\"Content-Type: text/plain; charset=UTF-8\"");
+                    output.WriteLine("\"MIME-Version: 1.0\\n\"");
+                    output.WriteLine("\"Content-Type: text/plain; charset=UTF-8\\n\"");
+                    output.WriteLine("\"Content-Transfer-Encoding: 8bit\\n\"");
+                    output.WriteLine("\"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\\n\"");
+                    output.WriteLine("\"Language: en\\n\"");
                     output.WriteLine();
 
                     foreach (var poEntry in catalog.Entries)
