@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Optional;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Optional;
 using Translatable.Export.Po;
 
 namespace Translatable.Export
@@ -82,7 +82,7 @@ namespace Translatable.Export
 
             var first = _assemblies.First();
 
-            var assemblyName = args.Name.Split(new[] {','}, StringSplitOptions.None)[0];
+            var assemblyName = args.Name.Split(new[] { ',' }, StringSplitOptions.None)[0];
             var uri = new UriBuilder(first.CodeBase);
             var assemblyFolder = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
             var assemblyPath = Path.Combine(assemblyFolder, assemblyName + ".dll");
@@ -123,6 +123,7 @@ namespace Translatable.Export
                 if (TypeHelper.IsType(property.PropertyType, typeof(IPluralBuilder)))
                     continue;
 
+                // TODO: allow to access private setters of inherited fields
                 if (!property.CanRead)
                     throw new InvalidOperationException($"The property {property.Name} in type {translatable.FullName} is not readable!");
 
@@ -143,7 +144,7 @@ namespace Translatable.Export
 
                 if (property.PropertyType == typeof(string[]))
                 {
-                    var value = (string[]) property.GetValue(obj, null);
+                    var value = (string[])property.GetValue(obj, null);
 
                     if (value.Length != 2)
                         throw new InvalidDataException($"The plural string for {property.Name} must contain two strings: a singular and a plural form. It contained {value.Length} strings.");

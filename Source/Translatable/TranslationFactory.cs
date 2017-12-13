@@ -105,6 +105,7 @@ namespace Translatable
 
             foreach (var property in properties)
             {
+                // TODO: allow to access private setters of inherited fields
                 if (!property.CanRead || !property.CanWrite)
                     continue;
 
