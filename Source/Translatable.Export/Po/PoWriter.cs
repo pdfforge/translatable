@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -32,10 +33,9 @@ namespace Translatable.Export.Po
                         if (!string.IsNullOrWhiteSpace(poEntry.Comment))
                             output.WriteLine($"#. {poEntry.Comment}");
 
-                        if (poEntry.SourceReferences.Any())
+                        foreach (var sourceReference in GetDistinctSourceReferences(poEntry))
                         {
-                            var referencesString = string.Join(" ", poEntry.SourceReferences);
-                            output.WriteLine($"#: {referencesString}");
+                            output.WriteLine($"#: {sourceReference}");
                         }
 
                         if (!string.IsNullOrWhiteSpace(poEntry.Context))
@@ -60,6 +60,13 @@ namespace Translatable.Export.Po
                     }
                 }
             }
+        }
+
+        private IEnumerable<string> GetDistinctSourceReferences(PoEntry poEntry)
+        {
+            return poEntry.SourceReferences
+                .Distinct()
+                .OrderBy(s => s);
         }
     }
 }
