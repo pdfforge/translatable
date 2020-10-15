@@ -57,6 +57,18 @@ namespace Translatable.Export
 
                 return catalog.Some<Catalog, ResultCode>();
             }
+            catch (ReflectionTypeLoadException ex)
+            {
+                Console.WriteLine("Error: " + ex);
+                Console.WriteLine("");
+                Console.WriteLine("LoaderExceptions:");
+
+                foreach (var loaderException in ex.LoaderExceptions)
+                {
+                    Console.WriteLine(loaderException);
+                }
+                return Option.None<Catalog, ResultCode>(ResultCode.Error);
+            }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex);
