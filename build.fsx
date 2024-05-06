@@ -71,7 +71,7 @@ Target "SetAssemblyInfoYear" (fun _ ->
       ReplaceAssemblyInfoVersions (fun p ->
       { p with
           OutputFileName = f
-          AssemblyCopyright = sprintf "Copyright pdfforge GmbH %i" (DateTime.Now.Year)
+          AssemblyCopyright = sprintf "Copyright Avanquest pdfforge GmbH %i" (DateTime.Now.Year)
       }))
 )
 
@@ -108,6 +108,7 @@ Target "Pack" (fun _ ->
     !! (sourceDir </> "**/*.paket.template")
     |> Seq.iter (fun file -> updatePackageVersion file)
 
+    //Use dotnet tool 
     Paket.Pack (fun p -> {p with OutputPath = artifactsDir; Version = packageVersion})
 )
 
