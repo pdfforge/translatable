@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("pdfforge GmbH")]
 [assembly: AssemblyProduct("TranslatableExport")]
-[assembly: AssemblyCopyright("Copyright pdfforge GmbH 2017")]
+[assembly: AssemblyCopyright("Copyright Avanquest pdfforge GmbH 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

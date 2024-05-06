@@ -1,4 +1,5 @@
 ﻿using NGettext;
+using System.Globalization;
 using Translatable.NGettext;
 using Translatable.TranslationTest;
 using Xunit;
@@ -12,7 +13,7 @@ namespace Translatable.UnitTest
 
         public CachedTranslationFactoryTest()
         {
-            _translationFactory = new TranslationFactory(new GettextTranslationSource(new Catalog()));
+            _translationFactory = new TranslationFactory(new GettextTranslationSource(new Catalog(new CultureInfo("En"))));
             _cachedTranslationFactory = new CachedTranslationFactory(_translationFactory);
         }
 

@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TranslationTest")]
-[assembly: AssemblyCopyright("Copyright pdfforge GmbH 2017")]
+[assembly: AssemblyCopyright("Copyright Avanquest pdfforge GmbH 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,20 +1,19 @@
-framework: net40, net40-full
-source https://www.nuget.org/api/v2
+framework: net472
+source https://api.nuget.org/v3/index.json
 
 nuget NGettext >= 0.6
 nuget CommandLineParser >= 2.0 prerelease
 nuget Optional
 
 group build
-	source https://www.nuget.org/api/v2
-
-    nuget FAKE
+	source https://api.nuget.org/v3/index.json
+    
+    nuget FAKE ~> 4
     nuget Gettext.Tools
     nuget xunit.runner.console
 
 group test
-	framework: net40, net40-full
-	source https://www.nuget.org/api/v2
-
+	source https://api.nuget.org/v3/index.json
+    
     nuget xUnit ~> 1
 	nuget NSubstitute
