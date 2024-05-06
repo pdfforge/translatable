@@ -1,9 +1,5 @@
-﻿using System;
+﻿using NGettext.Plural;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NGettext.Plural;
 using Translatable;
 
 namespace Translation
@@ -21,7 +17,12 @@ namespace Translation
 
         public string GetPlural(int number, IList<string> pluralForms)
         {
-            return pluralForms[_pluralRule.Evaluate(number)];
+            var pluralRule = _pluralRule.Evaluate(number);
+            //Limit the plural rule if the default translation has less plural forms than the current language
+            if (pluralRule >= pluralForms.Count)
+                pluralRule = pluralForms.Count - 1;
+
+            return pluralForms[pluralRule];
         }
 
         public string GetFormattedPlural(int number, IList<string> pluralForms)

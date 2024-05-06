@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using NGettext;
 using Translatable.NGettext;
@@ -14,7 +15,7 @@ namespace Translatable.UnitTest
 
         public TranslationFactoryTest()
         {
-            _catalog = new Catalog();
+            _catalog = new Catalog(new CultureInfo("En"));
             _translationFactory = new TranslationFactory(new GettextTranslationSource(_catalog));
             _defaultTranslation = new TestTranslation();
         }
