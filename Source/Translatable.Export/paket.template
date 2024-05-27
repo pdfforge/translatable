@@ -5,12 +5,6 @@ licenseUrl http://opensource.org/licenses/MIT
 projectUrl https://github.com/pdfforge/translatable
 iconUrl https://github.com/pdfforge/translatable/blob/master/doc/translatable.png?raw=true
 
-files
-	bin/Release/CommandLine.dll => tools
-	bin/Release/Optional.dll => tools
-	bin/Release/Translatable*.dll => tools
-	bin/Release/Translatable.Export.exe => tools
-
 description
 	The Translatable project (https://www.nuget.org/packages/Translatable/) has the goal to make creating type-safe translation objects easy.
 

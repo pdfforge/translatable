@@ -1,4 +1,5 @@
 ﻿Optional
 
 group test
-    xUnit
+    NUnit
+    Microsoft.Net.Test.Sdk

@@ -12,13 +12,13 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: Translatable.TranslationTest.MainWindowTranslation
-#: Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "Main window title"
 msgstr "Hauptfenster-Titel"
 
-#: Translatable.TranslationTest.MainWindowTranslation
-#: Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid ""
 "This is my content\r\n"
 "with multiple lines"
@@ -26,43 +26,43 @@ msgstr ""
 "Dies ist mein Inhalt\r\n"
 "mit mehreren Zeilen"
 
-#: Translatable.TranslationTest.MainWindowTranslation
-#: Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "Messages"
 msgstr "Nachrichten"
 
-#: Translatable.TranslationTest.MainWindowTranslation
-#: Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgctxt "Some context"
 msgid "Messages"
 msgstr "Botschaften"
 
-#. Translatable.TranslationTest.MainWindowTranslation
+#. Translatable.SampleProject.MainWindowTranslation
 msgid "You have {0} new message"
 msgid_plural "You have {0} new messages"
 msgstr[0] "Sie haben {0} neue Nachricht"
 msgstr[1] "Sie haben {0} neue Nachrichten"
 
 #. This page is intentionally left blank
-#: Translatable.TranslationTest.MainWindowTranslation
-#: Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "This translation might be \"missing\""
 msgstr ""
 
-#: Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "Test"
 msgstr ""
 
 #. Test
-#: Translatable.TranslationTest.TestEnum
+#: Translatable.SampleProject.TestEnum
 msgid "This is the first value"
 msgstr "Dies ist der erste Wert"
 
-#: Translatable.TranslationTest.TestEnum
+#: Translatable.SampleProject.TestEnum
 msgid "This is the second value"
 msgstr "Dies ist der zweite Wert"
 
-#: Translatable.TranslationTest.TestEnum
+#: Translatable.SampleProject.TestEnum
 msgid "This is some extraordinary third value!"
 msgstr "Dies ist ein besonderer dritter Wert!"
 

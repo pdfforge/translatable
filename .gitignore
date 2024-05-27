@@ -235,9 +235,10 @@ _Pvt_Extensions
 .paket/paket.exe
 paket-files
 
-# FAKE - F# Make
-.fake/
+# Nuke
+.nuke/temp
 
 build
+!Source/build/
 signatures
 build-cache

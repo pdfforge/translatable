@@ -1,9 +1,7 @@
-@echo off
-cls
+:; set -eo pipefail
+:; SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
+:; ${SCRIPT_DIR}/build.sh "$@"
+:; exit $?
 
-paket.exe restore
-if errorlevel 1 (
-  exit /b %errorlevel%
-)
-
-packages\build\FAKE\tools\FAKE.exe build.fsx %*
+@ECHO OFF
+powershell -ExecutionPolicy ByPass -NoProfile -File "%~dp0build.ps1" %*

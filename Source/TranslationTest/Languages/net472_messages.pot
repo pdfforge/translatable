@@ -6,48 +6,53 @@ msgstr ""
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: en\n"
 
-#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "Main window title"
 msgstr ""
 
-#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "This is my content\r\nwith multiple lines"
 msgstr ""
 
-#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "Messages"
 msgstr ""
 
-#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgctxt "Some context"
 msgid "Messages"
 msgstr ""
 
-#. Translatable.TranslationTest.MainWindowTranslation
+#. Translatable.SampleProject.MainWindowTranslation
 msgid "You have {0} new message"
 msgid_plural "You have {0} new messages"
 msgstr[0] ""
 msgstr[1] ""
 
 #. This page is intentionally left blank
-#: Translatable.TranslationTest.MainWindowTranslation Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "This translation might be \"missing\""
 msgstr ""
 
-#: Translatable.TranslationTest.TestTranslation
+#: Translatable.SampleProject.TestTranslation
 msgid "Test"
 msgstr ""
 
 #. Test
-#: Translatable.TranslationTest.TestEnum
+#: Translatable.SampleProject.TestEnum
 msgid "This is the first value"
 msgstr ""
 
-#: Translatable.TranslationTest.TestEnum
+#: Translatable.SampleProject.TestEnum
 msgid "This is the second value"
 msgstr ""
 
-#: Translatable.TranslationTest.TestEnum
+#: Translatable.SampleProject.TestEnum
 msgid "This is some extraordinary third value!"
 msgstr ""
 

@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using Translatable.NGettext;
 
-namespace Translatable.TranslationTest
+namespace Translatable.SampleProject
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
@@ -91,7 +91,8 @@ namespace Translatable.TranslationTest
             var candidates = new[]
             {
                 "Languages",
-                @"..\..\Languages"
+                @"..\..\Languages",
+                @"..\..\..\Languages"
             };
 
             foreach (var candidate in candidates)

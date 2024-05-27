@@ -1,13 +1,13 @@
-﻿<Window x:Class="Translatable.TranslationTest.MainWindow"
+﻿<Window x:Class="Translatable.SampleProject.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:translationTest="clr-namespace:Translatable.TranslationTest"
+        xmlns:sampleProject="clr-namespace:Translatable.SampleProject"
         mc:Ignorable="d"
         Title="{Binding Translation.Title}" Height="350" Width="525">
     <Window.DataContext>
-        <translationTest:MainWindowViewModel />
+        <sampleProject:MainWindowViewModel />
     </Window.DataContext>
     <StackPanel>
         <TextBlock Text="{Binding Translation.SampleText}" />
