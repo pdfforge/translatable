@@ -8,9 +8,6 @@ iconUrl https://github.com/pdfforge/translatable/blob/master/doc/translatable.pn
 references
 	Translatable.dll
 
-files
-	bin/Release/Translatable.dll => lib/net40
-
 description
 	The Translatable project has the goal to make creating type-safe translation objects easy. Read more on how to get started in GitHub: https://github.com/pdfforge/translatable.
 	

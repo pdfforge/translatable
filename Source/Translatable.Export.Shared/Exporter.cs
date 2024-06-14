@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Translatable.Export.Po;
+using Translatable.Export.Shared.Po;
 
-namespace Translatable.Export
+namespace Translatable.Export.Shared
 {
     public enum ResultCode
     {
@@ -17,111 +17,62 @@ namespace Translatable.Export
 
     public class Exporter
     {
-        private IList<Assembly> _assemblies;
-
-        public Option<Catalog, ResultCode> DoExport(IEnumerable<string> assemblyFiles)
+        public Option<Catalog, ResultCode> DoExport<TAssemblyLoader>(IEnumerable<string> assemblyFiles) where TAssemblyLoader : IAssemblyLoader, new()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-
-            try
-            {
-                _assemblies = LoadAssemblies(assemblyFiles).ToList();
-
-                var allTypes = _assemblies
-                    .SelectMany(s => s.GetTypes())
-                    .ToList();
-
-                var translatables = allTypes
-                    .Where(TypeHelper.IsTranslatable)
-                    .ToList();
-
-                var enums = allTypes
-                    .Where(TypeHelper.HasTranslatableAttribute)
-                    .ToList();
-
-                if (!translatables.Any() && !enums.Any())
-                    return Option.None<Catalog, ResultCode>(ResultCode.NoTranslationsFound);
-
-                var catalog = new Catalog();
-
-                foreach (var translatable in translatables)
-                    ExportClass(translatable, catalog);
-
-                foreach (var type in enums)
-                {
-                    ExportEnum(type, catalog);
-                }
-
-                if (!catalog.Entries.Any())
-                    return Option.None<Catalog, ResultCode>(ResultCode.NoTranslationsFound);
-
-                return catalog.Some<Catalog, ResultCode>();
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                Console.WriteLine("Error: " + ex);
-                Console.WriteLine("");
-                Console.WriteLine("LoaderExceptions:");
-
-                foreach (var loaderException in ex.LoaderExceptions)
-                {
-                    Console.WriteLine(loaderException);
-                }
-                return Option.None<Catalog, ResultCode>(ResultCode.Error);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex);
-                return Option.None<Catalog, ResultCode>(ResultCode.Error);
-            }
-            finally
-            {
-                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
-            }
-        }
-
-        private Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            var domain = (AppDomain)sender;
-
-            foreach (var assembly in domain.GetAssemblies())
-            {
-                if (assembly.FullName == args.Name)
-                {
-                    return assembly;
-                }
-            }
-
-            var first = _assemblies.First();
-
-            var assemblyName = args.Name.Split(new[] { ',' }, StringSplitOptions.None)[0];
-            var uri = new UriBuilder(first.CodeBase);
-            var assemblyFolder = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
-            var assemblyPath = Path.Combine(assemblyFolder, assemblyName + ".dll");
-
-            if (File.Exists(assemblyPath))
-                return Assembly.LoadFile(assemblyPath);
-
-            return null;
-        }
-
-        private IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> assemblyFiles)
-        {
-            var assemblies = new List<Assembly>();
-            foreach (var assemblyFile in assemblyFiles)
+            using (var assemblyLoader = new TAssemblyLoader())
             {
                 try
                 {
-                    assemblies.Add(Assembly.LoadFile(Path.GetFullPath(assemblyFile)));
+                    assemblyLoader.LoadAssemblies(assemblyFiles);
+
+                    var allTypes = assemblyLoader.Assemblies
+                        .SelectMany(s => s.GetTypes());
+
+                    var translatables = allTypes
+                        .Where(TypeHelper.IsTranslatable)
+                        .ToList();
+
+                    var enums = allTypes
+                        .Where(TypeHelper.HasTranslatableAttribute)
+                        .ToList();
+
+                    if (!translatables.Any() && !enums.Any())
+                        return Option.None<Catalog, ResultCode>(ResultCode.NoTranslationsFound);
+
+                    var catalog = new Catalog();
+
+                    foreach (var translatable in translatables)
+                        ExportClass(translatable, catalog);
+
+                    foreach (var type in enums)
+                    {
+                        ExportEnum(type, catalog);
+                    }
+
+                    if (!catalog.Entries.Any())
+                        return Option.None<Catalog, ResultCode>(ResultCode.NoTranslationsFound);
+
+                    return catalog.Some<Catalog, ResultCode>();
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    Console.WriteLine("Error: " + ex);
+                    Console.WriteLine("");
+                    Console.WriteLine("LoaderExceptions:");
+
+                    foreach (var loaderException in ex.LoaderExceptions)
+                    {
+                        Console.WriteLine(loaderException);
+                    }
+
+                    return Option.None<Catalog, ResultCode>(ResultCode.Error);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Could not load assembly file '{assemblyFile}': {ex}");
-                    throw;
+                    Console.WriteLine("Error: " + ex);
+                    return Option.None<Catalog, ResultCode>(ResultCode.Error);
                 }
             }
-
-            return assemblies;
         }
 
         public void ExportClass(Type translatable, Catalog catalog)

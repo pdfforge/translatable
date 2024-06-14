@@ -1,4 +1,4 @@
-framework: net472
+framework: net8.0, net472, netstandard2.0
 source https://api.nuget.org/v3/index.json
 
 nuget NGettext >= 0.6
@@ -8,12 +8,12 @@ nuget Optional
 group build
 	source https://api.nuget.org/v3/index.json
     
-    nuget FAKE ~> 4
     nuget Gettext.Tools
-    nuget xunit.runner.console
+    nuget NUnit.ConsoleRunner
 
 group test
 	source https://api.nuget.org/v3/index.json
     
-    nuget xUnit ~> 1
+    nuget Microsoft.Net.Test.Sdk
 	nuget NSubstitute
+    nuget NUnit ~> 3

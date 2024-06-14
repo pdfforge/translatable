@@ -1,4 +1,4 @@
-﻿namespace Translatable.TranslationTest
+﻿namespace Translatable.SampleProject
 {
     public class MainWindowTranslation : ITranslatable
     {

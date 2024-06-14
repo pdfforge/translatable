@@ -1,0 +1,58 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: en\n"
+
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
+msgid "Main window title"
+msgstr ""
+
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
+msgid "This is my content\r\nwith multiple lines"
+msgstr ""
+
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
+msgid "Messages"
+msgstr ""
+
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
+msgctxt "Some context"
+msgid "Messages"
+msgstr ""
+
+#. Translatable.SampleProject.MainWindowTranslation
+msgid "You have {0} new message"
+msgid_plural "You have {0} new messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#. This page is intentionally left blank
+#: Translatable.SampleProject.MainWindowTranslation
+#: Translatable.SampleProject.TestTranslation
+msgid "This translation might be \"missing\""
+msgstr ""
+
+#: Translatable.SampleProject.TestTranslation
+msgid "Test"
+msgstr ""
+
+#. Test
+#: Translatable.SampleProject.TestEnum
+msgid "This is the first value"
+msgstr ""
+
+#: Translatable.SampleProject.TestEnum
+msgid "This is the second value"
+msgstr ""
+
+#: Translatable.SampleProject.TestEnum
+msgid "This is some extraordinary third value!"
+msgstr ""
+

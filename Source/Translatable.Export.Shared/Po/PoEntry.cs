@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Translatable.Export.Po
+namespace Translatable.Export.Shared.Po
 {
     public class PoEntry
     {

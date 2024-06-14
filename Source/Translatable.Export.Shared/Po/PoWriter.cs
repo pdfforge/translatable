@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Translatable.Export.Po
+namespace Translatable.Export.Shared.Po
 {
     public class PotWriter
     {

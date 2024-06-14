@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Translatable.Export.Po;
-using Xunit;
+using NUnit.Framework;
+using Translatable.Export.Shared;
+using Translatable.Export.Shared.Po;
 
 namespace Translatable.Export.UnitTest
 {
+    [TestFixture]
     public class ExporterTest
     {
-        [Fact]
+        [Test]
         public void ExportMainWindowTranslation_ContainsFiveTranslations()
         {
             var catalog = DoExport(typeof(TestTranslation));
-            
-            Assert.Equal(6, catalog.Entries.Count);
+
+            Assert.AreEqual(6, catalog.Entries.Count);
         }
 
-        [Fact]
+        [Test]
         public void ExportMainWindowTranslation_ContainsTitleTranslation()
         {
             var catalog = DoExport(typeof(TestTranslation));
@@ -27,25 +29,25 @@ namespace Translatable.Export.UnitTest
             Assert.True(HasTranslation(catalog, translation.Title));
         }
 
-        [Fact]
+        [Test]
         public void ExportMainWindowTranslation_ContainsNewMessagesTextPluralTranslation()
         {
             var catalog = DoExport(typeof(TestTranslation));
 
             var translation = new TestTranslation();
 
-            Assert.True(GetPlurals(catalog).Any(entry => entry.MsgIdSingular == translation.NewMessagesText[0] &&  entry.MsgIdPlural == translation.NewMessagesText[1]));
+            Assert.True(GetPlurals(catalog).Any(entry => entry.MsgIdSingular == translation.NewMessagesText[0] && entry.MsgIdPlural == translation.NewMessagesText[1]));
         }
 
-        [Fact]
+        [Test]
         public void ExportTestEnum_ContainsCorrectNumberofTranslations()
         {
             var catalog = DoExport(typeof(TestEnum));
 
-            Assert.Equal(Enum.GetValues(typeof(TestEnum)).Length, catalog.Entries.Count);
+            Assert.AreEqual(Enum.GetValues(typeof(TestEnum)).Length, catalog.Entries.Count);
         }
 
-        [Fact]
+        [Test]
         public void ExportTestEnum_ContainsTranslationsForEachEntry()
         {
             var catalog = DoExport(typeof(TestEnum));
@@ -55,19 +57,19 @@ namespace Translatable.Export.UnitTest
             Assert.True(HasTranslation(catalog, TranslationAttribute.GetValue(TestEnum.ThirdValue)));
         }
 
-        [Fact]
+        [Test]
         public void ExportThisAssembly_ContainsTranslations()
         {
             var catalog = ExportCurrentAssembly();
             var translation = new TestTranslation();
 
-            Assert.Equal(9, catalog.Entries.Count);
+            Assert.AreEqual(9, catalog.Entries.Count);
 
             Assert.True(HasTranslation(catalog, translation.Title));
             Assert.True(HasTranslation(catalog, TranslationAttribute.GetValue(TestEnum.FirstValue)));
         }
 
-        [Fact]
+        [Test]
         public void ExportThisAssembly_HasMessageWithContext()
         {
             var catalog = ExportCurrentAssembly();
@@ -76,7 +78,7 @@ namespace Translatable.Export.UnitTest
             Assert.True(HasTranslation(catalog, translation.Messages2, "Menu"));
         }
 
-        [Fact]
+        [Test]
         public void ExportThisAssembly_HasMessageWithoutContext()
         {
             var catalog = ExportCurrentAssembly();
@@ -114,7 +116,7 @@ namespace Translatable.Export.UnitTest
             var exporter = new Exporter();
             var assembly = GetCurrentAssemblyFile();
 
-            var catalog = exporter.DoExport(new []{assembly});
+            var catalog = exporter.DoExport<AssemblyLoader>(new[] { assembly });
 
             return catalog.ValueOr(() => null);
         }

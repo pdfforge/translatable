@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using CommandLine;
 
-namespace Translatable.Export
+namespace Translatable.Export.Shared
 {
     public class ExportOptions
     {
