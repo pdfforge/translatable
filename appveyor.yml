@@ -1,6 +1,7 @@
 version: 0.1.{build}
 
 build_script:
+- cmd: dotnet tool restore
 - cmd: build.cmd Pack
 
 artifacts:
