@@ -48,8 +48,14 @@ internal class Build : NukeBuild
             BuildDir.DeleteDirectory();
         });
 
+    private Target Restore => t => t
+        .Executes(() =>
+        {
+            DotNetTasks.DotNetToolRestore();
+        });
+
     private Target UpdateAssemblyInfo => t => t
-        .DependsOn(Clean)
+        .DependsOn(Restore)
         .Executes(() =>
         {
             SourceDir
