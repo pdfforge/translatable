@@ -7,12 +7,14 @@ namespace Translatable.Export.Tool
     internal class LoadContext : AssemblyLoadContext
     {
         private readonly AssemblyDependencyResolver _resolver;
+        private readonly string _assemblyDir;
         private readonly string _netCoreAppRuntimeDir;
         private readonly string _windowsDesktopRuntimeDir;
 
         public LoadContext(string assemblyPath)
         {
             _resolver = new(assemblyPath);
+            _assemblyDir = Path.GetDirectoryName(assemblyPath)!;
             _netCoreAppRuntimeDir = RuntimeEnvironment.GetRuntimeDirectory();
             // find the windowsDesktopApp runtime directory
             var versionWithoutPrefix = RuntimeEnvironment.GetSystemVersion().Replace("v", string.Empty);
@@ -32,6 +34,10 @@ namespace Translatable.Export.Tool
         {
             var assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
             if (assemblyPath != null)
+                return LoadFromAssemblyPath(assemblyPath);
+            
+            assemblyPath = Path.Combine(_assemblyDir, $"{assemblyName.Name}.dll");
+            if (File.Exists(assemblyPath))
                 return LoadFromAssemblyPath(assemblyPath);
 
             assemblyPath = Path.Combine(_windowsDesktopRuntimeDir, $"{assemblyName.Name}.dll");
