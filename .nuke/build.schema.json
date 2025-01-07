@@ -78,6 +78,7 @@
               "ExportSampleProjectPot",
               "Pack",
               "Publish",
+              "Restore",
               "RunUnitTests",
               "UpdateAssemblyInfo",
               "UpdatePoFiles"
@@ -100,6 +101,7 @@
               "ExportSampleProjectPot",
               "Pack",
               "Publish",
+              "Restore",
               "RunUnitTests",
               "UpdateAssemblyInfo",
               "UpdatePoFiles"

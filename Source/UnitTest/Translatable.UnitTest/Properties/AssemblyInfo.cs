@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Avanquest pdfforge GmbH")]
 [assembly: AssemblyProduct("Translatable.UnitTest")]
-[assembly: AssemblyCopyright("Copyright 2024 Avanquest pdfforge GmbH")]
+[assembly: AssemblyCopyright("Copyright 2025 Avanquest pdfforge GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
