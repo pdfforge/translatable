@@ -7,9 +7,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Avanquest pdfforge GmbH")]
 [assembly: AssemblyProduct("Translatable.NGettext")]
-[assembly: AssemblyCopyright("Copyright 2024 Avanquest pdfforge GmbH")]
+[assembly: AssemblyCopyright("Copyright 2025 Avanquest pdfforge GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: AssemblyVersion("0.3.0.0")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
